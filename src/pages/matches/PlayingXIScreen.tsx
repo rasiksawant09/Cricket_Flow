@@ -88,7 +88,8 @@ export function PlayingXIScreen() {
       ? [[team.promx_crickettournamentteamid, team.promx_tournamentteamname] as const]
       : []),
   );
-  const availableRows: PlayingXIGridRow[] = roster
+  const availableRowsFor = (teamId: string | undefined): PlayingXIGridRow[] => roster
+    .filter((player) => player.promx_tournamentteam === teamId)
     .filter((player) => !player.promx_crickettournamentplayerid || !selectedPlayerIds.has(player.promx_crickettournamentplayerid))
     .map((player) => ({
       id: player.promx_crickettournamentplayerid ?? `${player.promx_tournamentteam}-${player.promx_tournamentplayername}`,
@@ -138,11 +139,14 @@ export function PlayingXIScreen() {
             )}
           </section>
           <PlayingXIGrid
-            title="Available tournament players"
-            rows={availableRows}
-            emptyMessage={roster.length === 0
-              ? "No tournament players are registered for either match team."
-              : "All registered players for these teams are in the selected XI."}
+            title={`Team A available players - ${teamNames.get(match.promx_teama) ?? "Unknown team"}`}
+            rows={availableRowsFor(match.promx_teama)}
+            emptyMessage="No available players for Team A."
+          />
+          <PlayingXIGrid
+            title={`Team B available players - ${teamNames.get(match.promx_teamb) ?? "Unknown team"}`}
+            rows={availableRowsFor(match.promx_teamb)}
+            emptyMessage="No available players for Team B."
           />
           <PlayingXIGrid
             title="Selected Playing XI"

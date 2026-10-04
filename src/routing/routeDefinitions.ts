@@ -8,6 +8,7 @@ import { TournamentTeamsScreen } from "../pages/tournaments/TournamentTeamsScree
 import { MatchDetailScreen } from "../pages/matches/MatchDetailScreen";
 import { MatchListScreen } from "../pages/matches/MatchListScreen";
 import { MatchSetupScreen } from "../pages/matches/MatchSetupScreen";
+import { LiveScoringScreen } from "../pages/matches/LiveScoringScreen";
 import { PlayingXIScreen } from "../pages/matches/PlayingXIScreen";
 import { TossScreen } from "../pages/matches/TossScreen";
 import { ROUTE_PATHS } from "./routeConstants";
@@ -26,7 +27,7 @@ export const routeDefinitions: RouteObject[] = [
   { id: "toss", path: ROUTE_PATHS.toss, element: createElement(TossScreen) },
   { id: "over-summary", path: ROUTE_PATHS.overSummary },
   { id: "scorecard", path: ROUTE_PATHS.scorecard },
-  { id: "live-scoring", path: ROUTE_PATHS.liveScoring },
+  { id: "live-scoring", path: ROUTE_PATHS.liveScoring, element: createElement(LiveScoringScreen) },
   { id: "statistics", path: ROUTE_PATHS.statistics },
   { id: "batting-statistics", path: ROUTE_PATHS.battingStatistics },
   { id: "bowling-statistics", path: ROUTE_PATHS.bowlingStatistics },

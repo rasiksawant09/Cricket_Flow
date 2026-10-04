@@ -7,7 +7,8 @@ import type { ITournamentRepository } from "../../repositories/interfaces/ITourn
 import type { IProjectionService } from "../interfaces/IProjectionService";
 import type { IStandingService } from "../interfaces/IStandingService";
 import type { IStatisticsService } from "../interfaces/IStatisticsService";
-import { guardService, serviceFailure } from "./ServiceSupport";
+import { guardService, readAllPages, serviceFailure } from "./ServiceSupport";
+import { reduceMatchStates } from "./MatchStateReducer";
 
 export class ProjectionService implements IProjectionService {
   private readonly events: IBallEventRepository;
@@ -33,18 +34,45 @@ export class ProjectionService implements IProjectionService {
     this.standings = standings;
   }
 
+  getMatchState(matchId: string): Promise<Result<CricketMatchState[]>> {
+    return guardService("Could not retrieve Match State.", () =>
+      readAllPages("Could not retrieve Match State.", (cursor) => this.matchStates.getByMatch(matchId, undefined, cursor)),
+    );
+  }
+
   rebuildMatchState(matchId: string): Promise<Result<CricketMatchState[]>> {
     return guardService("Could not rebuild Match State.", async () => {
       const match = await this.matches.getById(matchId);
       if (!match.success) return match;
-      const eventPage = await this.events.getByMatch(matchId);
-      if (!eventPage.success) return eventPage;
-      const statePage = await this.matchStates.getByMatch(matchId);
-      if (!statePage.success) return statePage;
-      return serviceFailure(
-        "Could not rebuild Match State.",
-        new Error("A deterministic Ball Event projection reducer is not specified; existing state was not overwritten."),
+      const events = await readAllPages("Could not retrieve Ball Events.", (cursor) =>
+        this.events.getByMatch(matchId, undefined, cursor),
       );
+      if (!events.success) return events;
+      const existing = await readAllPages("Could not retrieve Match State.", (cursor) =>
+        this.matchStates.getByMatch(matchId, undefined, cursor),
+      );
+      if (!existing.success) return existing;
+
+      const rebuilt: CricketMatchState[] = [];
+      for (const reduced of reduceMatchStates(events.data)) {
+        const current = existing.data.find((state) => state.promx_innings === reduced.inningsId);
+        const saved = await this.matchStates.upsert({
+          ...current,
+          promx_match: matchId,
+          promx_innings: reduced.inningsId,
+          promx_matchstatename: current?.promx_matchstatename ?? `Match State ${reduced.inningsId}`,
+          promx_currentruns: reduced.runs,
+          promx_currentwickets: reduced.wickets,
+          promx_currentballs: reduced.legalBalls,
+          promx_currentovers: reduced.overs,
+          promx_currentstriker: reduced.striker,
+          promx_currentnonstriker: reduced.nonStriker,
+          promx_currentbowler: reduced.bowler,
+        });
+        if (!saved.success) return saved;
+        rebuilt.push(saved.data);
+      }
+      return { success: true, data: rebuilt };
     });
   }
 
@@ -52,12 +80,12 @@ export class ProjectionService implements IProjectionService {
     return guardService("Could not refresh projections after Ball Event.", async () => {
       const match = await this.matches.getById(ballEvent.promx_match);
       if (!match.success) return match;
+      const state = await this.rebuildMatchState(ballEvent.promx_match);
+      if (!state.success) return state;
       const statistics = await this.statistics.calculateStatisticsFromEvents(match.data.promx_cricketmatchid ?? ballEvent.promx_match);
       if (!statistics.success) return statistics;
       const standings = await this.standings.updateStandings(match.data.promx_tournament);
       if (!standings.success) return standings;
-      const state = await this.rebuildMatchState(ballEvent.promx_match);
-      if (!state.success) return state;
       return { success: true, data: undefined };
     });
   }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { ReactNode } from "react";
 import type { CricketBallEvent } from "../models/CricketBallEvent";
 import type { CricketInnings } from "../models/CricketInnings";
@@ -6,7 +6,7 @@ import type { CricketMatch } from "../models/CricketMatch";
 import type { CricketMatchState } from "../models/CricketMatchState";
 import type { CricketOver } from "../models/CricketOver";
 import type { IProjectionService } from "../services/interfaces/IProjectionService";
-import type { IScoringService } from "../services/interfaces/IScoringService";
+import type { IScoringService, DeliveryInput, DeliveryOutcome, LiveScoringSnapshot } from "../services/interfaces/IScoringService";
 import type { IUndoService } from "../services/interfaces/IUndoService";
 import { ScoringContext } from "./ScoringContextDefinition";
 
@@ -20,6 +20,20 @@ interface ScoringProviderProps {
 export function ScoringProvider({ children, scoringService, projectionService, undoService }: ScoringProviderProps) {
   const [currentMatchId, setCurrentMatchId] = useState<string | null>(null);
   const [currentMatchState, setCurrentMatchState] = useState<CricketMatchState[]>([]);
+  const [liveScoring, setLiveScoring] = useState<LiveScoringSnapshot | null>(null);
+
+  const loadLiveScoring = useCallback(async (matchId: string): Promise<Result<LiveScoringSnapshot>> => {
+    const result = await scoringService.getLiveScoringSnapshot(matchId);
+    if (result.success) {
+      setCurrentMatchId(matchId);
+      setLiveScoring(result.data);
+    }
+    return result;
+  }, [scoringService]);
+
+  const recordDelivery = useCallback((input: DeliveryInput): Promise<Result<DeliveryOutcome>> => {
+    return scoringService.recordDelivery(input);
+  }, [scoringService]);
 
   async function processBall(ballEvent: CricketBallEvent): Promise<Result<CricketBallEvent>> {
     return scoringService.processBall(ballEvent);
@@ -75,8 +89,11 @@ export function ScoringProvider({ children, scoringService, projectionService, u
       value={{
         currentMatchId,
         currentMatchState,
+        liveScoring,
         setCurrentMatchId,
         setCurrentMatchState,
+        loadLiveScoring,
+        recordDelivery,
         processBall,
         processWide,
         processNoBall,

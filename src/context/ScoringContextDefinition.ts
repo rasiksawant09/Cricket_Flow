@@ -5,12 +5,16 @@ import type { CricketInnings } from "../models/CricketInnings";
 import type { CricketMatch } from "../models/CricketMatch";
 import type { CricketMatchState } from "../models/CricketMatchState";
 import type { CricketOver } from "../models/CricketOver";
+import type { DeliveryInput, DeliveryOutcome, LiveScoringSnapshot } from "../services/interfaces/IScoringService";
 
 export interface ScoringContextValue {
   currentMatchId: string | null;
   currentMatchState: CricketMatchState[];
+  liveScoring: LiveScoringSnapshot | null;
   setCurrentMatchId: Dispatch<SetStateAction<string | null>>;
   setCurrentMatchState: Dispatch<SetStateAction<CricketMatchState[]>>;
+  loadLiveScoring(matchId: string): Promise<Result<LiveScoringSnapshot>>;
+  recordDelivery(input: DeliveryInput): Promise<Result<DeliveryOutcome>>;
   processBall(ballEvent: CricketBallEvent): Promise<Result<CricketBallEvent>>;
   processWide(ballEvent: CricketBallEvent): Promise<Result<CricketBallEvent>>;
   processNoBall(ballEvent: CricketBallEvent): Promise<Result<CricketBallEvent>>;

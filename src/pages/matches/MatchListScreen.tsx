@@ -11,6 +11,7 @@ import type { TableColumnDefinition } from "@fluentui/react-components";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { TournamentPage } from "../../components/tournaments/TournamentPage";
+import { MatchCreationDialog } from "../../components/matches/MatchCreationDialog";
 import { TournamentRequestState } from "../../components/tournaments/TournamentRequestState";
 import { useMatchContext } from "../../hooks/useMatchContext";
 import { useTournamentContext } from "../../hooks/useTournamentContext";
@@ -25,22 +26,23 @@ function teamName(id: string, names: ReadonlyMap<string, string>): string {
 
 export function MatchListScreen() {
   const navigate = useNavigate();
-  const { matches, loadMatches } = useMatchContext();
-  const { tournamentTeams, loadTournamentTeams } = useTournamentContext();
+  const { matches, loadMatches, createMatch } = useMatchContext();
+  const { tournaments, tournamentTeams, loadTournaments, loadTournamentTeams } = useTournamentContext();
   const load = useCallback(async () => {
-    const result = await loadMatches();
-    if (!result.success) {
-      return result;
-    }
-
-    const tournamentIds = [...new Set(result.data.map((match) => match.promx_tournament))];
+    const [result, tournamentResult] = await Promise.all([loadMatches(), loadTournaments()]);
+    if (!result.success) return result;
+    if (!tournamentResult.success) return tournamentResult;
+    const tournamentIds = [...new Set([
+      ...result.data.map((match) => match.promx_tournament),
+      ...tournamentResult.data.flatMap((tournament) => tournament.promx_crickettournamentid ? [tournament.promx_crickettournamentid] : []),
+    ])];
     const teamResults = await Promise.all(tournamentIds.map(loadTournamentTeams));
     const failed = teamResults.find((teamResult) => !teamResult.success);
     if (failed && !failed.success) {
       return { success: false as const, error: failed.error };
     }
     return result;
-  }, [loadMatches, loadTournamentTeams]);
+  }, [loadMatches, loadTournamentTeams, loadTournaments]);
   const request = useTournamentRequest(load);
   const teamNames = new Map<string, string>();
   for (const team of tournamentTeams) {
@@ -78,6 +80,14 @@ export function MatchListScreen() {
 
   return (
     <TournamentPage title="Matches">
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <MatchCreationDialog
+          tournaments={tournaments}
+          teams={tournamentTeams}
+          onTournamentSelected={loadTournamentTeams}
+          onCreate={createMatch}
+        />
+      </div>
       <TournamentRequestState
         isLoading={request.isLoading}
         error={request.error}
@@ -87,6 +97,7 @@ export function MatchListScreen() {
       {!request.isLoading && !request.error && matches.length > 0 && (
         <DataGrid
           aria-label="Matches"
+          className="cf-table-surface"
           getRowId={(match) => match.promx_cricketmatchid ?? match.promx_matchname ?? String(match.promx_matchnumber)}
           items={matches}
           columns={columns}

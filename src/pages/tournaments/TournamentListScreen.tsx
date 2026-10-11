@@ -11,6 +11,7 @@ import {
 import type { TableColumnDefinition } from "@fluentui/react-components";
 import { useNavigate } from "react-router-dom";
 import { TournamentPage } from "../../components/tournaments/TournamentPage";
+import { TournamentFormDialog } from "../../components/tournaments/TournamentFormDialog";
 import { TournamentRequestState } from "../../components/tournaments/TournamentRequestState";
 import { useTournamentContext } from "../../hooks/useTournamentContext";
 import { useTournamentRequest } from "../../hooks/useTournamentRequest";
@@ -43,11 +44,20 @@ const columns: TableColumnDefinition<CricketTournament>[] = [
 
 export function TournamentListScreen() {
   const navigate = useNavigate();
-  const { tournaments, loadTournaments } = useTournamentContext();
+  const { tournaments, loadTournaments, createTournament } = useTournamentContext();
   const request = useTournamentRequest(loadTournaments);
 
   return (
     <TournamentPage title="Tournaments">
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <TournamentFormDialog
+          triggerLabel="Create Tournament"
+          onSave={createTournament}
+          onSaved={(tournament) => {
+            if (tournament.promx_crickettournamentid) navigate(routeFor.tournamentDetail(tournament.promx_crickettournamentid));
+          }}
+        />
+      </div>
       <TournamentRequestState
         isLoading={request.isLoading}
         error={request.error}
@@ -56,6 +66,7 @@ export function TournamentListScreen() {
       {!request.isLoading && !request.error && tournaments.length > 0 && (
         <DataGrid
           aria-label="Tournaments"
+          className="cf-table-surface"
           getRowId={(tournament) => tournament.promx_crickettournamentid ?? tournament.promx_tournamentname}
           items={tournaments}
           columns={columns}

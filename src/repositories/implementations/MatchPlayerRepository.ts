@@ -55,8 +55,8 @@ const WRITABLE_COLUMNS = [
   "statuscode",
 ] as const;
 const LOOKUP_TARGETS = {
-  promx_match: "promx_cricketmatchs",
-  promx_tournamentplayer: "promx_crickettournamentplayers",
+  promx_match: { entitySetName: "promx_cricketmatchs", navigationProperty: "promx_Match" },
+  promx_tournamentplayer: { entitySetName: "promx_crickettournamentplayers", navigationProperty: "promx_TournamentPlayer" },
 } as const;
 
 function mapMatchPlayer(row: DataverseRow): CricketMatchPlayer {

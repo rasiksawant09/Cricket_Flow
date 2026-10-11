@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "appId": null,
+  "appId": "af021084-ee3f-46d4-b5a2-efcea4e6a345",
   "appDisplayName": "Cricket Flow",
   "region": "prod",
   "appType": "CodeApp",
@@ -11,5 +11,101 @@
   "localAppUrl": "http://localhost:3000",
   "logoPath": "Default",
   "connectionReferences": {},
-  "databaseReferences": {}
+  "databaseReferences": {
+    "default.cds": {
+      "dataSources": {
+        "crickettournaments": {
+          "entitySetName": "promx_crickettournaments",
+          "logicalName": "promx_crickettournament",
+          "isHidden": false
+        },
+        "crickettournamentteams": {
+          "entitySetName": "promx_crickettournamentteams",
+          "logicalName": "promx_crickettournamentteam",
+          "isHidden": false
+        },
+        "crickettournamentplayers": {
+          "entitySetName": "promx_crickettournamentplayers",
+          "logicalName": "promx_crickettournamentplayer",
+          "isHidden": false
+        },
+        "cricketteams": {
+          "entitySetName": "promx_cricketteams",
+          "logicalName": "promx_cricketteam",
+          "isHidden": false
+        },
+        "cricketplayers": {
+          "entitySetName": "promx_cricketplayers",
+          "logicalName": "promx_cricketplayer",
+          "isHidden": false
+        },
+        "cricketmatches": {
+          "entitySetName": "promx_cricketmatchs",
+          "logicalName": "promx_cricketmatch",
+          "isHidden": false
+        },
+        "cricketmatchplayers": {
+          "entitySetName": "promx_cricketmatchplayers",
+          "logicalName": "promx_cricketmatchplayer",
+          "isHidden": false
+        },
+        "cricketinningses": {
+          "entitySetName": "promx_cricketinningses",
+          "logicalName": "promx_cricketinnings",
+          "isHidden": false
+        },
+        "cricketovers": {
+          "entitySetName": "promx_cricketovers",
+          "logicalName": "promx_cricketover",
+          "isHidden": false
+        },
+        "cricketballevents": {
+          "entitySetName": "promx_cricketballevents",
+          "logicalName": "promx_cricketballevent",
+          "isHidden": false
+        },
+        "cricketmatchstates": {
+          "entitySetName": "promx_cricketmatchstates",
+          "logicalName": "promx_cricketmatchstate",
+          "isHidden": false
+        },
+        "cricketbatterstatistics": {
+          "entitySetName": "promx_cricketbatterstatistics",
+          "logicalName": "promx_cricketbatterstatistic",
+          "isHidden": false
+        },
+        "cricketbowlerstatistics": {
+          "entitySetName": "promx_cricketbowlerstatistics",
+          "logicalName": "promx_cricketbowlerstatistic",
+          "isHidden": false
+        },
+        "crickettournamentrules": {
+          "entitySetName": "promx_crickettournamentrules",
+          "logicalName": "promx_crickettournamentrule",
+          "isHidden": false
+        },
+        "crickettournamentstandings": {
+          "entitySetName": "promx_crickettournamentstandings",
+          "logicalName": "promx_crickettournamentstanding",
+          "isHidden": false
+        },
+        "teams": {
+          "entitySetName": "promx_teams",
+          "logicalName": "promx_team",
+          "isHidden": false
+        },
+        "teamplayers": {
+          "entitySetName": "promx_teamplayers",
+          "logicalName": "promx_teamplayer",
+          "isHidden": false
+        },
+        "players": {
+          "entitySetName": "promx_players",
+          "logicalName": "promx_player",
+          "isHidden": false
+        }
+      },
+      "environmentVariableName": ""
+    }
+  }
 }

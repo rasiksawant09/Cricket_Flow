@@ -2,6 +2,9 @@ import { createContext } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import type { CricketMatch } from "../models/CricketMatch";
 import type { CricketMatchPlayer } from "../models/CricketMatchPlayer";
+import type { CricketBatterStatistic } from "../models/CricketBatterStatistic";
+import type { CricketBowlerStatistic } from "../models/CricketBowlerStatistic";
+import type { InningsScorecardStatistics } from "../services/interfaces/IStatisticsService";
 
 export interface PlayingXIValidationState {
   matchId: string;
@@ -19,12 +22,13 @@ export interface MatchContextValue {
   loadMatches(): Promise<Result<CricketMatch[]>>;
   loadMatch(matchId: string): Promise<Result<CricketMatch>>;
   loadPlayingXI(matchId: string): Promise<Result<CricketMatchPlayer[]>>;
+  loadBattingStatistics(matchId: string): Promise<Result<CricketBatterStatistic[]>>;
+  loadBowlingStatistics(matchId: string): Promise<Result<CricketBowlerStatistic[]>>;
+  loadInningsScorecard(matchId: string): Promise<Result<InningsScorecardStatistics[]>>;
   validatePlayingXI(matchId: string): Promise<Result<void>>;
   validateMatchSetup(match: CricketMatch): Promise<Result<void>>;
   createMatch(match: CricketMatch): Promise<Result<CricketMatch>>;
   updateMatch(match: CricketMatch): Promise<Result<CricketMatch>>;
-  startMatch(matchId: string): Promise<Result<CricketMatch>>;
-  completeMatch(matchId: string): Promise<Result<CricketMatch>>;
   abandonMatch(matchId: string): Promise<Result<CricketMatch>>;
   cancelMatch(matchId: string): Promise<Result<CricketMatch>>;
   createPlayingXI(matchId: string, players: CricketMatchPlayer[]): Promise<Result<CricketMatchPlayer[]>>;

@@ -14,6 +14,10 @@ export interface ScoringContextValue {
   setCurrentMatchId: Dispatch<SetStateAction<string | null>>;
   setCurrentMatchState: Dispatch<SetStateAction<CricketMatchState[]>>;
   loadLiveScoring(matchId: string): Promise<Result<LiveScoringSnapshot>>;
+  loadMatchInnings(matchId: string): Promise<Result<CricketInnings[]>>;
+  loadMatchStates(matchId: string): Promise<Result<CricketMatchState[]>>;
+  loadMatchEvents(matchId: string): Promise<Result<CricketBallEvent[]>>;
+  startInnings(matchId: string): Promise<Result<CricketInnings>>;
   recordDelivery(input: DeliveryInput): Promise<Result<DeliveryOutcome>>;
   processBall(ballEvent: CricketBallEvent): Promise<Result<CricketBallEvent>>;
   processWide(ballEvent: CricketBallEvent): Promise<Result<CricketBallEvent>>;

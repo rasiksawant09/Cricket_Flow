@@ -1,0 +1,544 @@
+{
+  "name": "promx_cricketmatchstate",
+  "title": "Cricket Match States",
+  "schema": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "x-ms-dataverse-entity": true,
+      "x-ms-dataverse-entityset": "promx_cricketmatchstates",
+      "x-ms-dataverse-primary-id": "promx_cricketmatchstateid",
+      "x-ms-dataverse-primary-name": "promx_matchstatename",
+      "properties": {
+        "createdby": {
+          "type": "string",
+          "title": "Created By",
+          "x-ms-dataverse-attribute": "createdby",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "CreatedBy",
+          "x-ms-dataverse-navigation-properties": [
+            "createdby"
+          ],
+          "x-ms-read-only": true
+        },
+        "createdbyname": {
+          "type": "string",
+          "title": "createdbyname",
+          "x-ms-dataverse-attribute": "createdbyname",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "CreatedByName",
+          "x-ms-dataverse-attribute-of": "createdby",
+          "x-ms-read-only": true,
+          "maxLength": 100
+        },
+        "createdbyyominame": {
+          "type": "string",
+          "title": "createdbyyominame",
+          "x-ms-dataverse-attribute": "createdbyyominame",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "CreatedByYomiName",
+          "x-ms-dataverse-attribute-of": "createdby",
+          "x-ms-read-only": true,
+          "required": true,
+          "maxLength": 100
+        },
+        "createdon": {
+          "type": "string",
+          "title": "Created On",
+          "x-ms-dataverse-attribute": "createdon",
+          "x-ms-dataverse-type": "DateTimeType",
+          "x-ms-schema-name": "CreatedOn",
+          "x-ms-read-only": true
+        },
+        "createdonbehalfby": {
+          "type": "string",
+          "title": "Created By (Delegate)",
+          "x-ms-dataverse-attribute": "createdonbehalfby",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "CreatedOnBehalfBy",
+          "x-ms-dataverse-navigation-properties": [
+            "createdonbehalfby"
+          ],
+          "x-ms-read-only": true
+        },
+        "createdonbehalfbyname": {
+          "type": "string",
+          "title": "createdonbehalfbyname",
+          "x-ms-dataverse-attribute": "createdonbehalfbyname",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "CreatedOnBehalfByName",
+          "x-ms-dataverse-attribute-of": "createdonbehalfby",
+          "x-ms-read-only": true,
+          "maxLength": 100
+        },
+        "createdonbehalfbyyominame": {
+          "type": "string",
+          "title": "createdonbehalfbyyominame",
+          "x-ms-dataverse-attribute": "createdonbehalfbyyominame",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "CreatedOnBehalfByYomiName",
+          "x-ms-dataverse-attribute-of": "createdonbehalfby",
+          "x-ms-read-only": true,
+          "required": true,
+          "maxLength": 100
+        },
+        "importsequencenumber": {
+          "type": "string",
+          "title": "Import Sequence Number",
+          "x-ms-dataverse-attribute": "importsequencenumber",
+          "x-ms-dataverse-type": "IntegerType",
+          "x-ms-schema-name": "ImportSequenceNumber"
+        },
+        "modifiedby": {
+          "type": "string",
+          "title": "Modified By",
+          "x-ms-dataverse-attribute": "modifiedby",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "ModifiedBy",
+          "x-ms-dataverse-navigation-properties": [
+            "modifiedby"
+          ],
+          "x-ms-read-only": true
+        },
+        "modifiedbyname": {
+          "type": "string",
+          "title": "modifiedbyname",
+          "x-ms-dataverse-attribute": "modifiedbyname",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "ModifiedByName",
+          "x-ms-dataverse-attribute-of": "modifiedby",
+          "x-ms-read-only": true,
+          "maxLength": 100
+        },
+        "modifiedbyyominame": {
+          "type": "string",
+          "title": "modifiedbyyominame",
+          "x-ms-dataverse-attribute": "modifiedbyyominame",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "ModifiedByYomiName",
+          "x-ms-dataverse-attribute-of": "modifiedby",
+          "x-ms-read-only": true,
+          "required": true,
+          "maxLength": 100
+        },
+        "modifiedon": {
+          "type": "string",
+          "title": "Modified On",
+          "x-ms-dataverse-attribute": "modifiedon",
+          "x-ms-dataverse-type": "DateTimeType",
+          "x-ms-schema-name": "ModifiedOn",
+          "x-ms-read-only": true
+        },
+        "modifiedonbehalfby": {
+          "type": "string",
+          "title": "Modified By (Delegate)",
+          "x-ms-dataverse-attribute": "modifiedonbehalfby",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "ModifiedOnBehalfBy",
+          "x-ms-dataverse-navigation-properties": [
+            "modifiedonbehalfby"
+          ],
+          "x-ms-read-only": true
+        },
+        "modifiedonbehalfbyname": {
+          "type": "string",
+          "title": "modifiedonbehalfbyname",
+          "x-ms-dataverse-attribute": "modifiedonbehalfbyname",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "ModifiedOnBehalfByName",
+          "x-ms-dataverse-attribute-of": "modifiedonbehalfby",
+          "x-ms-read-only": true,
+          "maxLength": 100
+        },
+        "modifiedonbehalfbyyominame": {
+          "type": "string",
+          "title": "modifiedonbehalfbyyominame",
+          "x-ms-dataverse-attribute": "modifiedonbehalfbyyominame",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "ModifiedOnBehalfByYomiName",
+          "x-ms-dataverse-attribute-of": "modifiedonbehalfby",
+          "x-ms-read-only": true,
+          "required": true,
+          "maxLength": 100
+        },
+        "overriddencreatedon": {
+          "type": "string",
+          "title": "Record Created On",
+          "x-ms-dataverse-attribute": "overriddencreatedon",
+          "x-ms-dataverse-type": "DateTimeType",
+          "x-ms-schema-name": "OverriddenCreatedOn"
+        },
+        "ownerid": {
+          "type": "string",
+          "title": "Owner",
+          "x-ms-dataverse-attribute": "ownerid",
+          "x-ms-dataverse-type": "OwnerType",
+          "x-ms-schema-name": "OwnerId",
+          "required": true
+        },
+        "owneridname": {
+          "type": "string",
+          "title": "owneridname",
+          "x-ms-dataverse-attribute": "owneridname",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "OwnerIdName",
+          "x-ms-dataverse-attribute-of": "ownerid",
+          "x-ms-read-only": true,
+          "required": true,
+          "maxLength": 100
+        },
+        "owneridtype": {
+          "type": "string",
+          "title": "owneridtype",
+          "x-ms-dataverse-attribute": "owneridtype",
+          "x-ms-dataverse-type": "EntityNameType",
+          "x-ms-schema-name": "OwnerIdType",
+          "x-ms-dataverse-attribute-of": "ownerid",
+          "required": true
+        },
+        "owneridyominame": {
+          "type": "string",
+          "title": "owneridyominame",
+          "x-ms-dataverse-attribute": "owneridyominame",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "OwnerIdYomiName",
+          "x-ms-dataverse-attribute-of": "ownerid",
+          "x-ms-read-only": true,
+          "required": true,
+          "maxLength": 100
+        },
+        "owningbusinessunit": {
+          "type": "string",
+          "title": "Owning Business Unit",
+          "x-ms-dataverse-attribute": "owningbusinessunit",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "OwningBusinessUnit",
+          "x-ms-dataverse-navigation-properties": [
+            "owningbusinessunit"
+          ],
+          "x-ms-read-only": true
+        },
+        "owningbusinessunitname": {
+          "type": "string",
+          "title": "owningbusinessunitname",
+          "x-ms-dataverse-attribute": "owningbusinessunitname",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "OwningBusinessUnitName",
+          "x-ms-dataverse-attribute-of": "owningbusinessunit",
+          "x-ms-read-only": true,
+          "required": true,
+          "maxLength": 100
+        },
+        "owningteam": {
+          "type": "string",
+          "title": "Owning Team",
+          "x-ms-dataverse-attribute": "owningteam",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "OwningTeam",
+          "x-ms-dataverse-navigation-properties": [
+            "owningteam"
+          ],
+          "x-ms-read-only": true
+        },
+        "owninguser": {
+          "type": "string",
+          "title": "Owning User",
+          "x-ms-dataverse-attribute": "owninguser",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "OwningUser",
+          "x-ms-dataverse-navigation-properties": [
+            "owninguser"
+          ],
+          "x-ms-read-only": true
+        },
+        "promx_ballsremaining": {
+          "type": "string",
+          "title": "Balls Remaining",
+          "x-ms-dataverse-attribute": "promx_ballsremaining",
+          "x-ms-dataverse-type": "IntegerType",
+          "x-ms-schema-name": "promx_BallsRemaining"
+        },
+        "promx_cricketmatchstateid": {
+          "type": "string",
+          "title": "Cricket Match State",
+          "x-ms-dataverse-attribute": "promx_cricketmatchstateid",
+          "x-ms-dataverse-type": "UniqueidentifierType",
+          "x-ms-schema-name": "promx_CricketMatchStateId",
+          "x-ms-dataverse-primary-id": true,
+          "required": true,
+          "x-ms-keyType": "primary"
+        },
+        "promx_currentballs": {
+          "type": "string",
+          "title": "Current Balls",
+          "x-ms-dataverse-attribute": "promx_currentballs",
+          "x-ms-dataverse-type": "IntegerType",
+          "x-ms-schema-name": "promx_CurrentBalls"
+        },
+        "promx_currentbowler": {
+          "type": "string",
+          "title": "Current Bowler",
+          "x-ms-dataverse-attribute": "promx_currentbowler",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "promx_CurrentBowler",
+          "x-ms-dataverse-navigation-properties": [
+            "promx_CurrentBowler"
+          ]
+        },
+        "promx_currentbowlername": {
+          "type": "string",
+          "title": "promx_currentbowlername",
+          "x-ms-dataverse-attribute": "promx_currentbowlername",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "promx_CurrentBowlerName",
+          "x-ms-dataverse-attribute-of": "promx_currentbowler",
+          "x-ms-read-only": true,
+          "maxLength": 850
+        },
+        "promx_currentnonstriker": {
+          "type": "string",
+          "title": "Current Non-Striker",
+          "x-ms-dataverse-attribute": "promx_currentnonstriker",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "promx_CurrentNonStriker",
+          "x-ms-dataverse-navigation-properties": [
+            "promx_CurrentNonStriker"
+          ]
+        },
+        "promx_currentnonstrikername": {
+          "type": "string",
+          "title": "promx_currentnonstrikername",
+          "x-ms-dataverse-attribute": "promx_currentnonstrikername",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "promx_CurrentNonStrikerName",
+          "x-ms-dataverse-attribute-of": "promx_currentnonstriker",
+          "x-ms-read-only": true,
+          "maxLength": 850
+        },
+        "promx_currentovers": {
+          "type": "string",
+          "title": "Current Overs",
+          "x-ms-dataverse-attribute": "promx_currentovers",
+          "x-ms-dataverse-type": "DecimalType",
+          "x-ms-schema-name": "promx_CurrentOvers"
+        },
+        "promx_currentrunrate": {
+          "type": "string",
+          "title": "Current Run Rate",
+          "x-ms-dataverse-attribute": "promx_currentrunrate",
+          "x-ms-dataverse-type": "DecimalType",
+          "x-ms-schema-name": "promx_CurrentRunRate"
+        },
+        "promx_currentruns": {
+          "type": "string",
+          "title": "Current Runs",
+          "x-ms-dataverse-attribute": "promx_currentruns",
+          "x-ms-dataverse-type": "IntegerType",
+          "x-ms-schema-name": "promx_CurrentRuns"
+        },
+        "promx_currentstriker": {
+          "type": "string",
+          "title": "Current Striker",
+          "x-ms-dataverse-attribute": "promx_currentstriker",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "promx_CurrentStriker",
+          "x-ms-dataverse-navigation-properties": [
+            "promx_CurrentStriker"
+          ]
+        },
+        "promx_currentstrikername": {
+          "type": "string",
+          "title": "promx_currentstrikername",
+          "x-ms-dataverse-attribute": "promx_currentstrikername",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "promx_CurrentStrikerName",
+          "x-ms-dataverse-attribute-of": "promx_currentstriker",
+          "x-ms-read-only": true,
+          "maxLength": 850
+        },
+        "promx_currentwickets": {
+          "type": "string",
+          "title": "Current Wickets",
+          "x-ms-dataverse-attribute": "promx_currentwickets",
+          "x-ms-dataverse-type": "IntegerType",
+          "x-ms-schema-name": "promx_CurrentWickets"
+        },
+        "promx_innings": {
+          "type": "string",
+          "title": "Innings",
+          "x-ms-dataverse-attribute": "promx_innings",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "promx_Innings",
+          "x-ms-dataverse-navigation-properties": [
+            "promx_Innings"
+          ]
+        },
+        "promx_inningsname": {
+          "type": "string",
+          "title": "promx_inningsname",
+          "x-ms-dataverse-attribute": "promx_inningsname",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "promx_InningsName",
+          "x-ms-dataverse-attribute-of": "promx_innings",
+          "x-ms-read-only": true,
+          "maxLength": 850
+        },
+        "promx_match": {
+          "type": "string",
+          "title": "Match",
+          "x-ms-dataverse-attribute": "promx_match",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "promx_Match",
+          "x-ms-dataverse-navigation-properties": [
+            "promx_Match"
+          ]
+        },
+        "promx_matchname": {
+          "type": "string",
+          "title": "promx_matchname",
+          "x-ms-dataverse-attribute": "promx_matchname",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "promx_MatchName",
+          "x-ms-dataverse-attribute-of": "promx_match",
+          "x-ms-read-only": true,
+          "maxLength": 850
+        },
+        "promx_matchstatename": {
+          "type": "string",
+          "title": "Match State Name",
+          "x-ms-dataverse-attribute": "promx_matchstatename",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "promx_MatchStateName",
+          "x-ms-dataverse-primary-name": true,
+          "required": true,
+          "maxLength": 850
+        },
+        "promx_requiredrunrate": {
+          "type": "string",
+          "title": "Required Run Rate",
+          "x-ms-dataverse-attribute": "promx_requiredrunrate",
+          "x-ms-dataverse-type": "DecimalType",
+          "x-ms-schema-name": "promx_RequiredRunRate"
+        },
+        "promx_runsrequired": {
+          "type": "string",
+          "title": "Runs Required",
+          "x-ms-dataverse-attribute": "promx_runsrequired",
+          "x-ms-dataverse-type": "IntegerType",
+          "x-ms-schema-name": "promx_RunsRequired"
+        },
+        "promx_target": {
+          "type": "string",
+          "title": "Target",
+          "x-ms-dataverse-attribute": "promx_target",
+          "x-ms-dataverse-type": "IntegerType",
+          "x-ms-schema-name": "promx_Target"
+        },
+        "statecode": {
+          "type": "string",
+          "title": "Status",
+          "x-ms-dataverse-attribute": "statecode",
+          "x-ms-dataverse-type": "StateType",
+          "x-ms-schema-name": "statecode",
+          "required": true,
+          "enum": [
+            "Active",
+            "Inactive"
+          ],
+          "x-ms-enum-values": [
+            0,
+            1
+          ],
+          "Color": [
+            null,
+            null
+          ],
+          "x-ms-optionsetmetadataid": "0652d3f2-e1cc-f011-8543-000d3a59aac4",
+          "x-ms-isGlobal": false,
+          "x-ms-optionsetdisplayname": "Status",
+          "x-ms-optionSetType": "State"
+        },
+        "statecodename": {
+          "type": "string",
+          "title": "statecodename",
+          "x-ms-dataverse-attribute": "statecodename",
+          "x-ms-dataverse-type": "VirtualType",
+          "x-ms-schema-name": "statecodeName",
+          "x-ms-dataverse-attribute-of": "statecode",
+          "x-ms-read-only": true
+        },
+        "statuscode": {
+          "type": "string",
+          "title": "Status Reason",
+          "x-ms-dataverse-attribute": "statuscode",
+          "x-ms-dataverse-type": "StatusType",
+          "x-ms-schema-name": "statuscode",
+          "enum": [
+            "Live",
+            "Completed",
+            "Innings Break"
+          ],
+          "x-ms-enum-values": [
+            1,
+            2,
+            796280001
+          ],
+          "Color": [
+            null,
+            null,
+            null
+          ],
+          "x-ms-optionsetmetadataid": "1052d3f2-e1cc-f011-8543-000d3a59aac4",
+          "x-ms-isGlobal": false,
+          "x-ms-optionsetdisplayname": "Status Reason",
+          "x-ms-optionSetType": "Status"
+        },
+        "statuscodename": {
+          "type": "string",
+          "title": "statuscodename",
+          "x-ms-dataverse-attribute": "statuscodename",
+          "x-ms-dataverse-type": "VirtualType",
+          "x-ms-schema-name": "statuscodeName",
+          "x-ms-dataverse-attribute-of": "statuscode",
+          "x-ms-read-only": true
+        },
+        "timezoneruleversionnumber": {
+          "type": "string",
+          "title": "Time Zone Rule Version Number",
+          "x-ms-dataverse-attribute": "timezoneruleversionnumber",
+          "x-ms-dataverse-type": "IntegerType",
+          "x-ms-schema-name": "TimeZoneRuleVersionNumber"
+        },
+        "utcconversiontimezonecode": {
+          "type": "string",
+          "title": "UTC Conversion Time Zone Code",
+          "x-ms-dataverse-attribute": "utcconversiontimezonecode",
+          "x-ms-dataverse-type": "IntegerType",
+          "x-ms-schema-name": "UTCConversionTimeZoneCode"
+        },
+        "versionnumber": {
+          "type": "string",
+          "title": "Version Number",
+          "x-ms-dataverse-attribute": "versionnumber",
+          "x-ms-dataverse-type": "BigIntType",
+          "x-ms-schema-name": "VersionNumber",
+          "x-ms-read-only": true
+        }
+      },
+      "required": [
+        "createdbyyominame",
+        "createdonbehalfbyyominame",
+        "modifiedbyyominame",
+        "modifiedonbehalfbyyominame",
+        "ownerid",
+        "owneridname",
+        "owneridtype",
+        "owneridyominame",
+        "owningbusinessunitname",
+        "promx_cricketmatchstateid",
+        "promx_matchstatename",
+        "statecode"
+      ]
+    }
+  }
+}

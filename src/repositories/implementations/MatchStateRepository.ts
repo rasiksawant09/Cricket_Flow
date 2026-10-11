@@ -59,11 +59,11 @@ const WRITABLE_COLUMNS = [
   "statuscode",
 ] as const;
 const LOOKUP_TARGETS = {
-  promx_currentbowler: "promx_cricketmatchplayers",
-  promx_currentnonstriker: "promx_cricketmatchplayers",
-  promx_currentstriker: "promx_cricketmatchplayers",
-  promx_innings: "promx_cricketinningses",
-  promx_match: "promx_cricketmatchs",
+  promx_currentbowler: { entitySetName: "promx_cricketmatchplayers", navigationProperty: "promx_CurrentBowler" },
+  promx_currentnonstriker: { entitySetName: "promx_cricketmatchplayers", navigationProperty: "promx_CurrentNonStriker" },
+  promx_currentstriker: { entitySetName: "promx_cricketmatchplayers", navigationProperty: "promx_CurrentStriker" },
+  promx_innings: { entitySetName: "promx_cricketinningses", navigationProperty: "promx_Innings" },
+  promx_match: { entitySetName: "promx_cricketmatchs", navigationProperty: "promx_Match" },
 } as const;
 
 function mapMatchState(row: DataverseRow): CricketMatchState {

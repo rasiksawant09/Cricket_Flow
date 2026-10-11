@@ -45,8 +45,8 @@ const WRITABLE_COLUMNS = [
   "statuscode",
 ] as const;
 const LOOKUP_TARGETS = {
-  promx_match: "promx_cricketmatchs",
-  promx_player: "promx_cricketmatchplayers",
+  promx_match: { entitySetName: "promx_cricketmatchs", navigationProperty: "promx_Match" },
+  promx_player: { entitySetName: "promx_cricketmatchplayers", navigationProperty: "promx_Player" },
 } as const;
 
 function mapBowlerStatistic(row: DataverseRow): CricketBowlerStatistic {

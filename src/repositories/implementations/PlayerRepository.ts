@@ -2,6 +2,7 @@ import type { DataClient, IOperationOptions, IOperationResult } from "@microsoft
 import type { CricketPlayer } from "../../models/CricketPlayer";
 import type { DataverseRecord } from "../../models/DataverseRecord";
 import type { IPlayerRepository } from "../interfaces/IPlayerRepository";
+import { deleteById } from "./DataverseRepositorySupport";
 
 type DataverseRow = Record<string, unknown>;
 
@@ -10,7 +11,6 @@ const STATUS_CODES = [1, 2] as const;
 const GENDER_CODES = [796280000, 796280001, 796280002] as const;
 const SOURCE_CODES = [796280000, 796280001, 796280002] as const;
 const SELECTED_COLUMNS = [
-  "promx_active",
   "promx_cricketplayer1",
   "promx_cricketplayerid",
   "promx_emailaddress",
@@ -22,7 +22,6 @@ const SELECTED_COLUMNS = [
   "statuscode",
 ] as const;
 const WRITABLE_COLUMNS = [
-  "promx_active",
   "promx_cricketplayer1",
   "promx_emailaddress",
   "promx_employeeid",
@@ -253,7 +252,7 @@ export class PlayerRepository implements IPlayerRepository {
       const operation = await this.client.updateRecordAsync<Record<string, unknown>, DataverseRow>(
         TABLE_NAME,
         id,
-        { statuscode: statusCode },
+        { statuscode: statusCode, statecode: statusCode === 2 ? 1 : 0 },
       );
       if (!operation.success) {
         return failed(operation.error, `Could not update status for ${TABLE_NAME} record ${id}.`);
@@ -262,5 +261,9 @@ export class PlayerRepository implements IPlayerRepository {
     } catch (error) {
       return failed(error, `Could not update status for ${TABLE_NAME} record ${id}.`);
     }
+  }
+
+  delete(id: string): Promise<Result<void>> {
+    return deleteById(this.client, TABLE_NAME, id);
   }
 }

@@ -1,6 +1,15 @@
 import type { DataverseRecord } from "./DataverseRecord";
 
-export interface CricketBallEvent extends DataverseRecord<1 | 2 | 796280001 | 796280002> {
+export const CRICKET_BALL_EVENT_STATUS = {
+  active: 1,
+  inactive: 2,
+  reversed: 796280001,
+  corrected: 796280002,
+} as const;
+
+export type CricketBallEventStatus = typeof CRICKET_BALL_EVENT_STATUS[keyof typeof CRICKET_BALL_EVENT_STATUS];
+
+export interface CricketBallEvent extends DataverseRecord<CricketBallEventStatus> {
   promx_balleventname: string;
   promx_ballnumber: number;
   promx_batterruns?: number | null;

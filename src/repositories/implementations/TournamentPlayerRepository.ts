@@ -4,6 +4,7 @@ import type { ITournamentPlayerRepository } from "../interfaces/ITournamentPlaye
 import {
   commonFields,
   createMapped,
+  deleteById,
   failed,
   fetchById,
   fetchPage,
@@ -50,9 +51,9 @@ const WRITABLE_COLUMNS = [
   "statuscode",
 ] as const;
 const LOOKUP_TARGETS = {
-  promx_player: "promx_cricketplayers",
-  promx_tournament: "promx_crickettournaments",
-  promx_tournamentteam: "promx_crickettournamentteams",
+  promx_player: { entitySetName: "promx_cricketplayers", navigationProperty: "promx_Player" },
+  promx_tournament: { entitySetName: "promx_crickettournaments", navigationProperty: "promx_Tournament" },
+  promx_tournamentteam: { entitySetName: "promx_crickettournamentteams", navigationProperty: "promx_TournamentTeam" },
 } as const;
 
 function mapTournamentPlayer(row: DataverseRow): CricketTournamentPlayer {
@@ -116,5 +117,9 @@ export class TournamentPlayerRepository implements ITournamentPlayerRepository {
     } catch (error) {
       return Promise.resolve(failed(error, `Could not update ${TABLE_NAME} record ${id}.`));
     }
+  }
+
+  delete(id: string): Promise<Result<void>> {
+    return deleteById(this.client, TABLE_NAME, id);
   }
 }

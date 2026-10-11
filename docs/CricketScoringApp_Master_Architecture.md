@@ -172,6 +172,8 @@ The Scoring App owns all scoring data.
 
 Data may optionally be imported from the Auction application.
 
+Auction import is an explicit, one-time read-and-copy workflow. It copies selected Auction teams and their players into Cricket Flow master tables. Tournament registration and scoring use only Cricket Flow records; they must not depend on Auction lookups or synchronize with Auction after import.
+
 After import:
 
 Scoring App owns:

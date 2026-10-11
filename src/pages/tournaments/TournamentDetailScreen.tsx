@@ -3,9 +3,11 @@ import { useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { TournamentPage } from "../../components/tournaments/TournamentPage";
 import { TournamentRequestState } from "../../components/tournaments/TournamentRequestState";
+import { TournamentFormDialog } from "../../components/tournaments/TournamentFormDialog";
 import { useTournamentContext } from "../../hooks/useTournamentContext";
 import { useTournamentRequest } from "../../hooks/useTournamentRequest";
 import { routeFor } from "../../routing/routeConstants";
+import { ROUTE_PATHS } from "../../routing/routeConstants";
 import { formatTournamentDate, tournamentStatusLabel } from "./tournamentFormatting";
 
 const useStyles = makeStyles({
@@ -31,7 +33,7 @@ const useStyles = makeStyles({
 export function TournamentDetailScreen() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { currentTournament, loadTournament } = useTournamentContext();
+  const { currentTournament, loadTournament, updateTournament, setTournamentStatus } = useTournamentContext();
   const load = useCallback(
     () => id ? loadTournament(id) : Promise.resolve({ success: false as const, error: new Error("A tournament ID is required.") }),
     [id, loadTournament],
@@ -77,8 +79,18 @@ export function TournamentDetailScreen() {
           </section>
           {id && (
             <nav className={styles.actions} aria-label="Tournament sections">
+              <TournamentFormDialog
+                key={tournament.promx_crickettournamentid}
+                initial={tournament}
+                triggerLabel="Edit Tournament"
+                onSave={updateTournament}
+                onStatusChange={setTournamentStatus}
+              />
               <Button appearance="secondary" onClick={() => navigate(routeFor.tournamentTeams(id))}>Teams</Button>
               <Button appearance="secondary" onClick={() => navigate(routeFor.tournamentPlayers(id))}>Players</Button>
+              <Button appearance="secondary" onClick={() => navigate(routeFor.tournamentRules(id))}>Rules</Button>
+              <Button appearance="primary" onClick={() => navigate(ROUTE_PATHS.standings)}>Standings</Button>
+              <Button appearance="secondary" onClick={() => navigate(ROUTE_PATHS.tournamentLeaderboards)}>Leaderboards</Button>
             </nav>
           )}
         </>

@@ -253,7 +253,34 @@ Example Operations:
 
 ---
 
-# 8. Match Service
+# 8. Auction Import Service
+
+Service:
+
+AuctionImportService
+
+Purpose:
+
+Perform a user-confirmed, one-time copy of selected Auction teams and their active players into Cricket Flow master records.
+
+Dependencies:
+
+- AuctionRepository (read-only source access)
+- TeamRepository
+- PlayerRepository
+
+Responsibilities:
+
+- Load Auction teams in caller-requested pages
+- Preview selected team and associated active-player counts
+- Skip existing copies by Auction source reference
+- Create Scoring master teams and players, returning imported/skipped/failed counts
+
+This service does not create tournament registrations. Users register the copied Cricket Flow master records through TournamentRegistrationService. No synchronization or ongoing Auction dependency is introduced.
+
+---
+
+# 9. Match Service
 
 Service:
 
@@ -287,7 +314,7 @@ Example Operations:
 
 ---
 
-# 9. Playing XI Service
+# 10. Playing XI Service
 
 Service:
 
@@ -324,7 +351,7 @@ Snapshots become immutable once Match Status becomes Live.
 
 ---
 
-# 10. Toss Service
+# 11. Toss Service
 
 Service:
 
@@ -350,7 +377,7 @@ Example Operations:
 
 ---
 
-# 11. Rule Engine Service
+# 12. Rule Engine Service
 
 Service:
 
@@ -387,7 +414,7 @@ Rule Engine does not score.
 
 ---
 
-# 12. Scoring Service
+# 13. Scoring Service
 
 Service:
 
@@ -438,7 +465,7 @@ Every scoring operation creates a Ball Event.
 
 ---
 
-# 13. Projection Service
+# 14. Projection Service
 
 Service:
 
@@ -489,7 +516,7 @@ This is orchestration order, not a service dependency: ProjectionService invokes
 
 ---
 
-# 14. Statistics Service
+# 15. Statistics Service
 
 Service:
 
@@ -527,7 +554,7 @@ Example Operations:
 
 ---
 
-# 15. Standing Service
+# 16. Standing Service
 
 Service:
 
@@ -576,7 +603,7 @@ Tournament Standing is a projection.
 
 ---
 
-# 16. Undo Service
+# 17. Undo Service
 
 Service:
 

@@ -1,0 +1,665 @@
+{
+  "name": "promx_cricketmatch",
+  "title": "Cricket Matches",
+  "schema": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "x-ms-dataverse-entity": true,
+      "x-ms-dataverse-entityset": "promx_cricketmatchs",
+      "x-ms-dataverse-primary-id": "promx_cricketmatchid",
+      "x-ms-dataverse-primary-name": "promx_matchname",
+      "properties": {
+        "createdby": {
+          "type": "string",
+          "title": "Created By",
+          "x-ms-dataverse-attribute": "createdby",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "CreatedBy",
+          "x-ms-dataverse-navigation-properties": [
+            "createdby"
+          ],
+          "x-ms-read-only": true
+        },
+        "createdbyname": {
+          "type": "string",
+          "title": "createdbyname",
+          "x-ms-dataverse-attribute": "createdbyname",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "CreatedByName",
+          "x-ms-dataverse-attribute-of": "createdby",
+          "x-ms-read-only": true,
+          "maxLength": 100
+        },
+        "createdbyyominame": {
+          "type": "string",
+          "title": "createdbyyominame",
+          "x-ms-dataverse-attribute": "createdbyyominame",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "CreatedByYomiName",
+          "x-ms-dataverse-attribute-of": "createdby",
+          "x-ms-read-only": true,
+          "required": true,
+          "maxLength": 100
+        },
+        "createdon": {
+          "type": "string",
+          "title": "Created On",
+          "x-ms-dataverse-attribute": "createdon",
+          "x-ms-dataverse-type": "DateTimeType",
+          "x-ms-schema-name": "CreatedOn",
+          "x-ms-read-only": true
+        },
+        "createdonbehalfby": {
+          "type": "string",
+          "title": "Created By (Delegate)",
+          "x-ms-dataverse-attribute": "createdonbehalfby",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "CreatedOnBehalfBy",
+          "x-ms-dataverse-navigation-properties": [
+            "createdonbehalfby"
+          ],
+          "x-ms-read-only": true
+        },
+        "createdonbehalfbyname": {
+          "type": "string",
+          "title": "createdonbehalfbyname",
+          "x-ms-dataverse-attribute": "createdonbehalfbyname",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "CreatedOnBehalfByName",
+          "x-ms-dataverse-attribute-of": "createdonbehalfby",
+          "x-ms-read-only": true,
+          "maxLength": 100
+        },
+        "createdonbehalfbyyominame": {
+          "type": "string",
+          "title": "createdonbehalfbyyominame",
+          "x-ms-dataverse-attribute": "createdonbehalfbyyominame",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "CreatedOnBehalfByYomiName",
+          "x-ms-dataverse-attribute-of": "createdonbehalfby",
+          "x-ms-read-only": true,
+          "required": true,
+          "maxLength": 100
+        },
+        "importsequencenumber": {
+          "type": "string",
+          "title": "Import Sequence Number",
+          "x-ms-dataverse-attribute": "importsequencenumber",
+          "x-ms-dataverse-type": "IntegerType",
+          "x-ms-schema-name": "ImportSequenceNumber"
+        },
+        "modifiedby": {
+          "type": "string",
+          "title": "Modified By",
+          "x-ms-dataverse-attribute": "modifiedby",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "ModifiedBy",
+          "x-ms-dataverse-navigation-properties": [
+            "modifiedby"
+          ],
+          "x-ms-read-only": true
+        },
+        "modifiedbyname": {
+          "type": "string",
+          "title": "modifiedbyname",
+          "x-ms-dataverse-attribute": "modifiedbyname",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "ModifiedByName",
+          "x-ms-dataverse-attribute-of": "modifiedby",
+          "x-ms-read-only": true,
+          "maxLength": 100
+        },
+        "modifiedbyyominame": {
+          "type": "string",
+          "title": "modifiedbyyominame",
+          "x-ms-dataverse-attribute": "modifiedbyyominame",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "ModifiedByYomiName",
+          "x-ms-dataverse-attribute-of": "modifiedby",
+          "x-ms-read-only": true,
+          "required": true,
+          "maxLength": 100
+        },
+        "modifiedon": {
+          "type": "string",
+          "title": "Modified On",
+          "x-ms-dataverse-attribute": "modifiedon",
+          "x-ms-dataverse-type": "DateTimeType",
+          "x-ms-schema-name": "ModifiedOn",
+          "x-ms-read-only": true
+        },
+        "modifiedonbehalfby": {
+          "type": "string",
+          "title": "Modified By (Delegate)",
+          "x-ms-dataverse-attribute": "modifiedonbehalfby",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "ModifiedOnBehalfBy",
+          "x-ms-dataverse-navigation-properties": [
+            "modifiedonbehalfby"
+          ],
+          "x-ms-read-only": true
+        },
+        "modifiedonbehalfbyname": {
+          "type": "string",
+          "title": "modifiedonbehalfbyname",
+          "x-ms-dataverse-attribute": "modifiedonbehalfbyname",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "ModifiedOnBehalfByName",
+          "x-ms-dataverse-attribute-of": "modifiedonbehalfby",
+          "x-ms-read-only": true,
+          "maxLength": 100
+        },
+        "modifiedonbehalfbyyominame": {
+          "type": "string",
+          "title": "modifiedonbehalfbyyominame",
+          "x-ms-dataverse-attribute": "modifiedonbehalfbyyominame",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "ModifiedOnBehalfByYomiName",
+          "x-ms-dataverse-attribute-of": "modifiedonbehalfby",
+          "x-ms-read-only": true,
+          "required": true,
+          "maxLength": 100
+        },
+        "overriddencreatedon": {
+          "type": "string",
+          "title": "Record Created On",
+          "x-ms-dataverse-attribute": "overriddencreatedon",
+          "x-ms-dataverse-type": "DateTimeType",
+          "x-ms-schema-name": "OverriddenCreatedOn"
+        },
+        "ownerid": {
+          "type": "string",
+          "title": "Owner",
+          "x-ms-dataverse-attribute": "ownerid",
+          "x-ms-dataverse-type": "OwnerType",
+          "x-ms-schema-name": "OwnerId",
+          "required": true
+        },
+        "owneridname": {
+          "type": "string",
+          "title": "owneridname",
+          "x-ms-dataverse-attribute": "owneridname",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "OwnerIdName",
+          "x-ms-dataverse-attribute-of": "ownerid",
+          "x-ms-read-only": true,
+          "required": true,
+          "maxLength": 100
+        },
+        "owneridtype": {
+          "type": "string",
+          "title": "owneridtype",
+          "x-ms-dataverse-attribute": "owneridtype",
+          "x-ms-dataverse-type": "EntityNameType",
+          "x-ms-schema-name": "OwnerIdType",
+          "x-ms-dataverse-attribute-of": "ownerid",
+          "required": true
+        },
+        "owneridyominame": {
+          "type": "string",
+          "title": "owneridyominame",
+          "x-ms-dataverse-attribute": "owneridyominame",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "OwnerIdYomiName",
+          "x-ms-dataverse-attribute-of": "ownerid",
+          "x-ms-read-only": true,
+          "required": true,
+          "maxLength": 100
+        },
+        "owningbusinessunit": {
+          "type": "string",
+          "title": "Owning Business Unit",
+          "x-ms-dataverse-attribute": "owningbusinessunit",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "OwningBusinessUnit",
+          "x-ms-dataverse-navigation-properties": [
+            "owningbusinessunit"
+          ],
+          "x-ms-read-only": true
+        },
+        "owningbusinessunitname": {
+          "type": "string",
+          "title": "owningbusinessunitname",
+          "x-ms-dataverse-attribute": "owningbusinessunitname",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "OwningBusinessUnitName",
+          "x-ms-dataverse-attribute-of": "owningbusinessunit",
+          "x-ms-read-only": true,
+          "required": true,
+          "maxLength": 100
+        },
+        "owningteam": {
+          "type": "string",
+          "title": "Owning Team",
+          "x-ms-dataverse-attribute": "owningteam",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "OwningTeam",
+          "x-ms-dataverse-navigation-properties": [
+            "owningteam"
+          ],
+          "x-ms-read-only": true
+        },
+        "owninguser": {
+          "type": "string",
+          "title": "Owning User",
+          "x-ms-dataverse-attribute": "owninguser",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "OwningUser",
+          "x-ms-dataverse-navigation-properties": [
+            "owninguser"
+          ],
+          "x-ms-read-only": true
+        },
+        "promx_cricketmatchid": {
+          "type": "string",
+          "title": "Cricket Match",
+          "x-ms-dataverse-attribute": "promx_cricketmatchid",
+          "x-ms-dataverse-type": "UniqueidentifierType",
+          "x-ms-schema-name": "promx_CricketMatchId",
+          "x-ms-dataverse-primary-id": true,
+          "required": true,
+          "x-ms-keyType": "primary"
+        },
+        "promx_loser": {
+          "type": "string",
+          "title": "Loser",
+          "x-ms-dataverse-attribute": "promx_loser",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "promx_Loser",
+          "x-ms-dataverse-navigation-properties": [
+            "promx_Loser"
+          ]
+        },
+        "promx_losername": {
+          "type": "string",
+          "title": "promx_losername",
+          "x-ms-dataverse-attribute": "promx_losername",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "promx_LoserName",
+          "x-ms-dataverse-attribute-of": "promx_loser",
+          "x-ms-read-only": true,
+          "maxLength": 850
+        },
+        "promx_matchname": {
+          "type": "string",
+          "title": "Match Name",
+          "x-ms-dataverse-attribute": "promx_matchname",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "promx_MatchName",
+          "x-ms-dataverse-primary-name": true,
+          "maxLength": 850
+        },
+        "promx_matchnumber": {
+          "type": "string",
+          "title": "Match Number",
+          "x-ms-dataverse-attribute": "promx_matchnumber",
+          "x-ms-dataverse-type": "IntegerType",
+          "x-ms-schema-name": "promx_MatchNumber"
+        },
+        "promx_matchstage": {
+          "type": "string",
+          "title": "Match Stage",
+          "x-ms-dataverse-attribute": "promx_matchstage",
+          "x-ms-dataverse-type": "PicklistType",
+          "x-ms-schema-name": "promx_MatchStage",
+          "enum": [
+            "League",
+            "Quarter Final",
+            "Semi Final",
+            "Final",
+            "Third Place",
+            "Custom"
+          ],
+          "x-ms-enum-values": [
+            796280000,
+            796280001,
+            796280002,
+            796280003,
+            796280004,
+            796280005
+          ],
+          "Color": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "x-ms-optionsetmetadataid": "ab8a6b5e-50be-f111-aaad-00224806e962",
+          "x-ms-isGlobal": true,
+          "x-ms-optionsetdisplayname": "Match Stage",
+          "x-ms-optionSetType": "Picklist"
+        },
+        "promx_matchstagename": {
+          "type": "string",
+          "title": "promx_matchstagename",
+          "x-ms-dataverse-attribute": "promx_matchstagename",
+          "x-ms-dataverse-type": "VirtualType",
+          "x-ms-schema-name": "promx_matchstageName",
+          "x-ms-dataverse-attribute-of": "promx_matchstage",
+          "x-ms-read-only": true
+        },
+        "promx_remarks": {
+          "type": "string",
+          "title": "Remarks",
+          "x-ms-dataverse-attribute": "promx_remarks",
+          "x-ms-dataverse-type": "MemoType",
+          "x-ms-schema-name": "promx_Remarks",
+          "maxLength": 5000
+        },
+        "promx_resulttype": {
+          "type": "string",
+          "title": "Result Type",
+          "x-ms-dataverse-attribute": "promx_resulttype",
+          "x-ms-dataverse-type": "PicklistType",
+          "x-ms-schema-name": "promx_ResultType",
+          "enum": [
+            "Normal Win",
+            "Tie",
+            "No Result",
+            "Abandoned",
+            "Super Over Win"
+          ],
+          "x-ms-enum-values": [
+            796280000,
+            796280001,
+            796280002,
+            796280003,
+            796280004
+          ],
+          "Color": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "x-ms-optionsetmetadataid": "f901a3ee-51be-f111-aaad-00224806e962",
+          "x-ms-isGlobal": true,
+          "x-ms-optionsetdisplayname": "Result Type",
+          "x-ms-optionSetType": "Picklist"
+        },
+        "promx_resulttypename": {
+          "type": "string",
+          "title": "promx_resulttypename",
+          "x-ms-dataverse-attribute": "promx_resulttypename",
+          "x-ms-dataverse-type": "VirtualType",
+          "x-ms-schema-name": "promx_resulttypeName",
+          "x-ms-dataverse-attribute-of": "promx_resulttype",
+          "x-ms-read-only": true
+        },
+        "promx_scheduleddatetime": {
+          "type": "string",
+          "title": "Scheduled Date Time",
+          "x-ms-dataverse-attribute": "promx_scheduleddatetime",
+          "x-ms-dataverse-type": "DateTimeType",
+          "x-ms-schema-name": "promx_ScheduledDateTime"
+        },
+        "promx_teama": {
+          "type": "string",
+          "title": "Team A",
+          "x-ms-dataverse-attribute": "promx_teama",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "promx_TeamA",
+          "x-ms-dataverse-navigation-properties": [
+            "promx_TeamA"
+          ],
+          "required": true
+        },
+        "promx_teamaname": {
+          "type": "string",
+          "title": "promx_teamaname",
+          "x-ms-dataverse-attribute": "promx_teamaname",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "promx_TeamAName",
+          "x-ms-dataverse-attribute-of": "promx_teama",
+          "x-ms-read-only": true,
+          "maxLength": 850
+        },
+        "promx_teamb": {
+          "type": "string",
+          "title": "Team B",
+          "x-ms-dataverse-attribute": "promx_teamb",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "promx_TeamB",
+          "x-ms-dataverse-navigation-properties": [
+            "promx_TeamB"
+          ],
+          "required": true
+        },
+        "promx_teambname": {
+          "type": "string",
+          "title": "promx_teambname",
+          "x-ms-dataverse-attribute": "promx_teambname",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "promx_TeamBName",
+          "x-ms-dataverse-attribute-of": "promx_teamb",
+          "x-ms-read-only": true,
+          "maxLength": 850
+        },
+        "promx_tossdecision": {
+          "type": "string",
+          "title": "Toss Decision",
+          "x-ms-dataverse-attribute": "promx_tossdecision",
+          "x-ms-dataverse-type": "PicklistType",
+          "x-ms-schema-name": "promx_TossDecision",
+          "enum": [
+            "Bat",
+            "Bowl"
+          ],
+          "x-ms-enum-values": [
+            796280000,
+            796280001
+          ],
+          "Color": [
+            null,
+            null
+          ],
+          "x-ms-optionsetmetadataid": "c6e00786-51be-f111-aaad-00224806e962",
+          "x-ms-isGlobal": true,
+          "x-ms-optionsetdisplayname": "Toss Decision",
+          "x-ms-optionSetType": "Picklist"
+        },
+        "promx_tossdecisionname": {
+          "type": "string",
+          "title": "promx_tossdecisionname",
+          "x-ms-dataverse-attribute": "promx_tossdecisionname",
+          "x-ms-dataverse-type": "VirtualType",
+          "x-ms-schema-name": "promx_tossdecisionName",
+          "x-ms-dataverse-attribute-of": "promx_tossdecision",
+          "x-ms-read-only": true
+        },
+        "promx_tosswinner": {
+          "type": "string",
+          "title": "Toss Winner",
+          "x-ms-dataverse-attribute": "promx_tosswinner",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "promx_TossWinner",
+          "x-ms-dataverse-navigation-properties": [
+            "promx_TossWinner"
+          ]
+        },
+        "promx_tosswinnername": {
+          "type": "string",
+          "title": "promx_tosswinnername",
+          "x-ms-dataverse-attribute": "promx_tosswinnername",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "promx_TossWinnerName",
+          "x-ms-dataverse-attribute-of": "promx_tosswinner",
+          "x-ms-read-only": true,
+          "maxLength": 850
+        },
+        "promx_tournament": {
+          "type": "string",
+          "title": "Tournament",
+          "x-ms-dataverse-attribute": "promx_tournament",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "promx_Tournament",
+          "x-ms-dataverse-navigation-properties": [
+            "promx_Tournament"
+          ],
+          "required": true
+        },
+        "promx_tournamentname": {
+          "type": "string",
+          "title": "promx_tournamentname",
+          "x-ms-dataverse-attribute": "promx_tournamentname",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "promx_TournamentName",
+          "x-ms-dataverse-attribute-of": "promx_tournament",
+          "x-ms-read-only": true,
+          "maxLength": 850
+        },
+        "promx_winner": {
+          "type": "string",
+          "title": "Winner",
+          "x-ms-dataverse-attribute": "promx_winner",
+          "x-ms-dataverse-type": "LookupType",
+          "x-ms-schema-name": "promx_Winner",
+          "x-ms-dataverse-navigation-properties": [
+            "promx_Winner"
+          ]
+        },
+        "promx_winnername": {
+          "type": "string",
+          "title": "promx_winnername",
+          "x-ms-dataverse-attribute": "promx_winnername",
+          "x-ms-dataverse-type": "StringType",
+          "x-ms-schema-name": "promx_WinnerName",
+          "x-ms-dataverse-attribute-of": "promx_winner",
+          "x-ms-read-only": true,
+          "maxLength": 850
+        },
+        "statecode": {
+          "type": "string",
+          "title": "Status",
+          "x-ms-dataverse-attribute": "statecode",
+          "x-ms-dataverse-type": "StateType",
+          "x-ms-schema-name": "statecode",
+          "required": true,
+          "enum": [
+            "Active",
+            "Inactive"
+          ],
+          "x-ms-enum-values": [
+            0,
+            1
+          ],
+          "Color": [
+            null,
+            null
+          ],
+          "x-ms-optionsetmetadataid": "6b7fe097-59ef-4a8d-a38f-54b79bb0263a",
+          "x-ms-isGlobal": false,
+          "x-ms-optionsetdisplayname": "Status",
+          "x-ms-optionSetType": "State"
+        },
+        "statecodename": {
+          "type": "string",
+          "title": "statecodename",
+          "x-ms-dataverse-attribute": "statecodename",
+          "x-ms-dataverse-type": "VirtualType",
+          "x-ms-schema-name": "statecodeName",
+          "x-ms-dataverse-attribute-of": "statecode",
+          "x-ms-read-only": true
+        },
+        "statuscode": {
+          "type": "string",
+          "title": "Status Reason",
+          "x-ms-dataverse-attribute": "statuscode",
+          "x-ms-dataverse-type": "StatusType",
+          "x-ms-schema-name": "statuscode",
+          "enum": [
+            "Draft",
+            "Completed",
+            "Ready",
+            "Live",
+            "Innings Break",
+            "Super Over Required",
+            "Super Over Live",
+            "Interrupted",
+            "Abandoned",
+            "Cancelled"
+          ],
+          "x-ms-enum-values": [
+            1,
+            2,
+            796280001,
+            796280002,
+            796280003,
+            796280004,
+            796280005,
+            796280006,
+            796280007,
+            796280008
+          ],
+          "Color": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "x-ms-optionsetmetadataid": "242a8e04-9d32-4665-8586-eabaf27a78e4",
+          "x-ms-isGlobal": false,
+          "x-ms-optionsetdisplayname": "Status Reason",
+          "x-ms-optionSetType": "Status"
+        },
+        "statuscodename": {
+          "type": "string",
+          "title": "statuscodename",
+          "x-ms-dataverse-attribute": "statuscodename",
+          "x-ms-dataverse-type": "VirtualType",
+          "x-ms-schema-name": "statuscodeName",
+          "x-ms-dataverse-attribute-of": "statuscode",
+          "x-ms-read-only": true
+        },
+        "timezoneruleversionnumber": {
+          "type": "string",
+          "title": "Time Zone Rule Version Number",
+          "x-ms-dataverse-attribute": "timezoneruleversionnumber",
+          "x-ms-dataverse-type": "IntegerType",
+          "x-ms-schema-name": "TimeZoneRuleVersionNumber"
+        },
+        "utcconversiontimezonecode": {
+          "type": "string",
+          "title": "UTC Conversion Time Zone Code",
+          "x-ms-dataverse-attribute": "utcconversiontimezonecode",
+          "x-ms-dataverse-type": "IntegerType",
+          "x-ms-schema-name": "UTCConversionTimeZoneCode"
+        },
+        "versionnumber": {
+          "type": "string",
+          "title": "Version Number",
+          "x-ms-dataverse-attribute": "versionnumber",
+          "x-ms-dataverse-type": "BigIntType",
+          "x-ms-schema-name": "VersionNumber",
+          "x-ms-read-only": true
+        }
+      },
+      "required": [
+        "createdbyyominame",
+        "createdonbehalfbyyominame",
+        "modifiedbyyominame",
+        "modifiedonbehalfbyyominame",
+        "ownerid",
+        "owneridname",
+        "owneridtype",
+        "owneridyominame",
+        "owningbusinessunitname",
+        "promx_cricketmatchid",
+        "promx_teama",
+        "promx_teamb",
+        "promx_tournament",
+        "statecode"
+      ]
+    }
+  }
+}

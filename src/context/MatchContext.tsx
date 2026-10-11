@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import type { ReactNode } from "react";
 import type { CricketMatch } from "../models/CricketMatch";
 import type { CricketMatchPlayer } from "../models/CricketMatchPlayer";
+import type { IStatisticsService } from "../services/interfaces/IStatisticsService";
 import type { IMatchService } from "../services/interfaces/IMatchService";
 import type { IPlayingXIService } from "../services/interfaces/IPlayingXIService";
 import type { ITossService } from "../services/interfaces/ITossService";
@@ -13,9 +14,10 @@ interface MatchProviderProps {
   matchService: IMatchService;
   playingXIService: IPlayingXIService;
   tossService: ITossService;
+  statisticsService: IStatisticsService;
 }
 
-export function MatchProvider({ children, matchService, playingXIService, tossService }: MatchProviderProps) {
+export function MatchProvider({ children, matchService, playingXIService, tossService, statisticsService }: MatchProviderProps) {
   const [matches, setMatches] = useState<CricketMatch[]>([]);
   const [currentMatch, setCurrentMatch] = useState<CricketMatch | null>(null);
   const [playingXI, setPlayingXI] = useState<CricketMatchPlayer[]>([]);
@@ -66,20 +68,16 @@ export function MatchProvider({ children, matchService, playingXIService, tossSe
     return result;
   }, [playingXIService]);
 
+  const loadBattingStatistics = useCallback((matchId: string) => statisticsService.getBattingStatistics(matchId), [statisticsService]);
+  const loadBowlingStatistics = useCallback((matchId: string) => statisticsService.getBowlingStatistics(matchId), [statisticsService]);
+  const loadInningsScorecard = useCallback((matchId: string) => statisticsService.getInningsScorecard(matchId), [statisticsService]);
+
   async function createMatch(match: CricketMatch): Promise<Result<CricketMatch>> {
     return storeMatch(await matchService.createMatch(match));
   }
 
   async function updateMatch(match: CricketMatch): Promise<Result<CricketMatch>> {
     return storeMatch(await matchService.updateMatch(match));
-  }
-
-  async function startMatch(matchId: string): Promise<Result<CricketMatch>> {
-    return storeMatch(await matchService.startMatch(matchId));
-  }
-
-  async function completeMatch(matchId: string): Promise<Result<CricketMatch>> {
-    return storeMatch(await matchService.completeMatch(matchId));
   }
 
   async function abandonMatch(matchId: string): Promise<Result<CricketMatch>> {
@@ -145,12 +143,13 @@ export function MatchProvider({ children, matchService, playingXIService, tossSe
         loadMatches,
         loadMatch,
         loadPlayingXI,
+        loadBattingStatistics,
+        loadBowlingStatistics,
+        loadInningsScorecard,
         validatePlayingXI,
         validateMatchSetup,
         createMatch,
         updateMatch,
-        startMatch,
-        completeMatch,
         abandonMatch,
         cancelMatch,
         createPlayingXI,

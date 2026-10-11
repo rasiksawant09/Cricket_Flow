@@ -42,7 +42,11 @@ export function MatchDetailScreen() {
           {id && (
             <nav aria-label="Match sections">
               <Button appearance="secondary" onClick={() => navigate(routeFor.matchSetup(id))}>Match setup</Button>
+              <Button appearance="secondary" onClick={() => navigate(routeFor.playingXI(id))}>Playing XI</Button>
               <Button appearance="secondary" onClick={() => navigate(routeFor.toss(id))}>Toss</Button>
+              <Button appearance="primary" onClick={() => navigate(routeFor.liveScoring(id))}>Live scoring</Button>
+              <Button appearance="secondary" onClick={() => navigate(routeFor.scorecard(id))}>Scorecard</Button>
+              <Button appearance="secondary" onClick={() => navigate(routeFor.overSummary(id))}>Over summary</Button>
             </nav>
           )}
         </>

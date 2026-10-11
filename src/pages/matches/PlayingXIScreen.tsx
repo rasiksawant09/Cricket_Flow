@@ -1,6 +1,6 @@
-import { MessageBar, MessageBarBody, Spinner, Text } from "@fluentui/react-components";
-import { useCallback, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Button, MessageBar, MessageBarBody, Spinner, Text } from "@fluentui/react-components";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { PlayingXIGrid } from "../../components/matches/PlayingXIGrid";
 import type { PlayingXIGridRow } from "../../components/matches/PlayingXIGrid";
 import { TournamentPage } from "../../components/tournaments/TournamentPage";
@@ -10,6 +10,7 @@ import { useTournamentContext } from "../../hooks/useTournamentContext";
 import { useTournamentRequest } from "../../hooks/useTournamentRequest";
 import type { CricketMatchPlayer } from "../../models/CricketMatchPlayer";
 import type { CricketTournamentPlayer } from "../../models/CricketTournamentPlayer";
+import { routeFor } from "../../routing/routeConstants";
 
 function roleLabel(value?: boolean | null): string {
   if (value === true) {
@@ -38,6 +39,7 @@ function selectedPlayerRow(
 
 export function PlayingXIScreen() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const {
     currentMatch,
     playingXI,
@@ -45,6 +47,9 @@ export function PlayingXIScreen() {
     loadMatch,
     loadPlayingXI,
     validatePlayingXI,
+    addPlayer,
+    removePlayer,
+    lockPlayingXI,
   } = useMatchContext();
   const { tournamentPlayers, tournamentTeams, loadTournamentPlayers } = useTournamentContext();
   const load = useCallback(async () => {
@@ -70,6 +75,8 @@ export function PlayingXIScreen() {
     return matchResult;
   }, [id, loadMatch, loadPlayingXI, loadTournamentPlayers]);
   const request = useTournamentRequest(load);
+  const [isSaving, setIsSaving] = useState(false);
+  const [actionError, setActionError] = useState<Error | null>(null);
   const match = currentMatch?.promx_cricketmatchid === id ? currentMatch : null;
   const roster = tournamentPlayers.filter((player) =>
     player.promx_tournament === match?.promx_tournament
@@ -107,6 +114,67 @@ export function PlayingXIScreen() {
     ? playingXIValidation.result
     : null;
 
+  async function selectPlayer(row: PlayingXIGridRow) {
+    if (!id || !match) return;
+    const registration = roster.find((player) => player.promx_crickettournamentplayerid === row.id);
+    if (!registration) return;
+    setIsSaving(true);
+    setActionError(null);
+    try {
+      const result = await addPlayer(id, {
+        promx_match: id,
+        promx_tournamentplayer: registration.promx_crickettournamentplayerid ?? "",
+        promx_playernamesnapshot: registration.promx_tournamentplayername,
+        promx_teamsnapshot: teamNames.get(registration.promx_tournamentteam) ?? "Unknown team",
+        promx_matchplayername: registration.promx_tournamentplayername,
+        promx_playercategorysnapshot: registration.promx_playercategory,
+        promx_jerseynumbersnapshot: registration.promx_jerseynumber,
+        promx_iscaptain: registration.promx_iscaptain,
+        promx_isplaying: true,
+      });
+      if (!result.success) setActionError(result.error);
+      else await validatePlayingXI(id);
+    } catch (error) {
+      setActionError(error instanceof Error ? error : new Error("Could not select player."));
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  async function removeSelectedPlayer(row: PlayingXIGridRow) {
+    const snapshot = selected.find((player) => player.promx_cricketmatchplayerid === row.id);
+    if (!snapshot?.promx_cricketmatchplayerid) return;
+    setIsSaving(true);
+    setActionError(null);
+    try {
+      const result = await removePlayer(snapshot.promx_cricketmatchplayerid);
+      if (!result.success) setActionError(result.error);
+      else if (id) await validatePlayingXI(id);
+    } catch (error) {
+      setActionError(error instanceof Error ? error : new Error("Could not remove player."));
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  async function lockAndStart() {
+    if (!id) return;
+    setIsSaving(true);
+    setActionError(null);
+    try {
+      const result = await lockPlayingXI(id);
+      if (!result.success) {
+        setActionError(result.error);
+        return;
+      }
+      navigate(routeFor.liveScoring(id));
+    } catch (error) {
+      setActionError(error instanceof Error ? error : new Error("Could not lock the Playing XI."));
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
   useEffect(() => {
     if (request.isLoading || request.error || !match || !id) {
       return;
@@ -138,21 +206,36 @@ export function PlayingXIScreen() {
               </MessageBar>
             )}
           </section>
+          {actionError && (
+            <MessageBar intent="error"><MessageBarBody>{actionError.message}</MessageBarBody></MessageBar>
+          )}
           <PlayingXIGrid
             title={`Team A available players - ${teamNames.get(match.promx_teama) ?? "Unknown team"}`}
             rows={availableRowsFor(match.promx_teama)}
             emptyMessage="No available players for Team A."
+            actionLabel="Select"
+            disabled={isSaving}
+            onAction={(row) => void selectPlayer(row)}
           />
           <PlayingXIGrid
             title={`Team B available players - ${teamNames.get(match.promx_teamb) ?? "Unknown team"}`}
             rows={availableRowsFor(match.promx_teamb)}
             emptyMessage="No available players for Team B."
+            actionLabel="Select"
+            disabled={isSaving}
+            onAction={(row) => void selectPlayer(row)}
           />
           <PlayingXIGrid
             title="Selected Playing XI"
             rows={selectedRows}
             emptyMessage="No players are currently selected in the Playing XI."
+            actionLabel="Remove"
+            disabled={isSaving}
+            onAction={(row) => void removeSelectedPlayer(row)}
           />
+          <Button appearance="primary" disabled={isSaving || request.isLoading} onClick={() => void lockAndStart()}>
+            {isSaving ? <Spinner label="Validating and locking Playing XI" size="tiny" /> : "Lock Playing XI and start match"}
+          </Button>
         </>
       )}
     </TournamentPage>

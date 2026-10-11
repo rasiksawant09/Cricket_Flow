@@ -31,8 +31,23 @@ export function ScoringProvider({ children, scoringService, projectionService, u
     return result;
   }, [scoringService]);
 
+  const loadMatchInnings = useCallback((matchId: string) => scoringService.getMatchInnings(matchId), [scoringService]);
+  const loadMatchStates = useCallback(async (matchId: string): Promise<Result<CricketMatchState[]>> => {
+    const result = await projectionService.getMatchState(matchId);
+    if (result.success) {
+      setCurrentMatchId(matchId);
+      setCurrentMatchState(result.data);
+    }
+    return result;
+  }, [projectionService]);
+  const loadMatchEvents = useCallback((matchId: string) => scoringService.getMatchEvents(matchId), [scoringService]);
+
   const recordDelivery = useCallback((input: DeliveryInput): Promise<Result<DeliveryOutcome>> => {
     return scoringService.recordDelivery(input);
+  }, [scoringService]);
+
+  const startInnings = useCallback((matchId: string): Promise<Result<CricketInnings>> => {
+    return scoringService.startInnings(matchId);
   }, [scoringService]);
 
   async function processBall(ballEvent: CricketBallEvent): Promise<Result<CricketBallEvent>> {
@@ -93,6 +108,10 @@ export function ScoringProvider({ children, scoringService, projectionService, u
         setCurrentMatchId,
         setCurrentMatchState,
         loadLiveScoring,
+        loadMatchInnings,
+        loadMatchStates,
+        loadMatchEvents,
+        startInnings,
         recordDelivery,
         processBall,
         processWide,

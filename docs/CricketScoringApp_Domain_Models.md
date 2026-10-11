@@ -81,6 +81,8 @@ interface CricketTournament extends DataverseRecord<1 | 2 | 796280001 | 79628000
 interface CricketTeam extends DataverseRecord<1 | 2> {
   promx_cricketteamid?: string | null;
   promx_description?: string | null;
+  promx_source?: 796280000 | 796280001 | 796280002 | null;
+  promx_source_reference_id?: string | null;
   promx_teamcolor?: string | null;
   promx_teamlogo?: string | null;
   promx_teamname: string;
@@ -90,13 +92,13 @@ interface CricketTeam extends DataverseRecord<1 | 2> {
 
 **Required Properties:** `promx_teamname`, `promx_teamshortname`.
 
-**Optional Properties:** `promx_cricketteamid`, `promx_description`, `promx_teamcolor`, `promx_teamlogo`; all inherited `DataverseRecord` properties.
+**Optional Properties:** `promx_cricketteamid`, `promx_description`, `promx_source`, `promx_source_reference_id`, `promx_teamcolor`, `promx_teamlogo`; all inherited `DataverseRecord` properties.
 
 **Lookup Relationships:** No domain lookup columns were returned. Shared platform lookups are in `DataverseRecord`.
 
-**Status Values:** `statecode`: Active (0), Inactive (1). `statuscode`: Active (1), Inactive (2). Architecture default: Active.
+**Status Values:** `statecode`: Active (0), Inactive (1). `statuscode`: Active (1), Inactive (2). `promx_source`: Manual (796280000), Auction (796280001), Import (796280002). Architecture default: Active.
 
-**Notes:** Source-of-truth reusable master data. Tournament and match history use tournament-specific registration and match records rather than deriving historical details from later master changes.
+**Notes:** Source-of-truth reusable master data. `promx_source_reference_id` stores the source record ID for copied records; it is provenance only, not a relationship or runtime dependency. Tournament and match history use tournament-specific registration and match records rather than deriving historical details from later master changes.
 
 ### CricketPlayer
 

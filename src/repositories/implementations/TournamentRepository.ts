@@ -250,7 +250,7 @@ export class TournamentRepository implements ITournamentRepository {
       const operation = await this.client.updateRecordAsync<Record<string, unknown>, DataverseRow>(
         TABLE_NAME,
         id,
-        { statuscode: statusCode },
+        { statuscode: statusCode, statecode: statusCode === 2 || statusCode === 796280002 ? 1 : 0 },
       );
       if (!operation.success) {
         return failed(operation.error, `Could not update status for ${TABLE_NAME} record ${id}.`);

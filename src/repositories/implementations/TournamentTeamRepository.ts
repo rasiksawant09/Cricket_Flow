@@ -39,8 +39,8 @@ const WRITABLE_COLUMNS = [
   "statuscode",
 ] as const;
 const LOOKUP_TARGETS = {
-  promx_team: "promx_cricketteams",
-  promx_tournament: "promx_crickettournaments",
+  promx_team: { entitySetName: "promx_cricketteams", navigationProperty: "promx_Team" },
+  promx_tournament: { entitySetName: "promx_crickettournaments", navigationProperty: "promx_Tournament" },
 } as const;
 
 function mapTournamentTeam(row: DataverseRow): CricketTournamentTeam {
@@ -100,6 +100,18 @@ export class TournamentTeamRepository implements ITournamentTeamRepository {
       return updateMapped(this.client, TABLE_NAME, id, model, WRITABLE_COLUMNS, SELECTED_COLUMNS, mapTournamentTeam, LOOKUP_TARGETS);
     } catch (error) {
       return Promise.resolve(failed(error, `Could not update ${TABLE_NAME} record ${id}.`));
+    }
+  }
+
+  async delete(id: string): Promise<Result<void>> {
+    try {
+      const operation = await this.client.deleteRecordAsync(TABLE_NAME, id);
+      if (!operation.success) {
+        return failed(operation.error, `Could not delete ${TABLE_NAME} record ${id}.`);
+      }
+      return { success: true, data: undefined };
+    } catch (error) {
+      return failed(error, `Could not delete ${TABLE_NAME} record ${id}.`);
     }
   }
 }

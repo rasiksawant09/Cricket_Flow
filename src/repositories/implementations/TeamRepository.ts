@@ -4,9 +4,11 @@ import type { ITeamRepository } from "../interfaces/ITeamRepository";
 import {
   commonFields,
   createMapped,
+  deleteById,
   failed,
   fetchById,
   fetchPage,
+  optionalChoice,
   optionalString,
   pageOptions,
   updateMapped,
@@ -16,9 +18,12 @@ import type { DataverseRow } from "./DataverseRepositorySupport";
 
 const TABLE_NAME = "promx_cricketteam";
 const STATUS_CODES = [1, 2] as const;
+const SOURCE_CODES = [796280000, 796280001, 796280002] as const;
 const SELECTED_COLUMNS = [
   "promx_cricketteamid",
   "promx_description",
+  "promx_source",
+  "promx_source_reference_id",
   "promx_teamcolor",
   "promx_teamlogo",
   "promx_teamname",
@@ -28,6 +33,8 @@ const SELECTED_COLUMNS = [
 ] as const;
 const WRITABLE_COLUMNS = [
   "promx_description",
+  "promx_source",
+  "promx_source_reference_id",
   "promx_teamcolor",
   "promx_teamlogo",
   "promx_teamname",
@@ -39,6 +46,8 @@ function mapTeam(row: DataverseRow): CricketTeam {
     ...commonFields(row, STATUS_CODES),
     promx_cricketteamid: optionalString(row, "promx_cricketteamid"),
     promx_description: optionalString(row, "promx_description"),
+    promx_source: optionalChoice(row, "promx_source", SOURCE_CODES),
+    promx_source_reference_id: optionalString(row, "promx_source_reference_id"),
     promx_teamcolor: optionalString(row, "promx_teamcolor"),
     promx_teamlogo: optionalString(row, "promx_teamlogo"),
     promx_teamname: requiredString(row, "promx_teamname"),
@@ -88,5 +97,9 @@ export class TeamRepository implements ITeamRepository {
 
   updateStatus(id: string, statusCode: NonNullable<CricketTeam["statuscode"]>): Promise<Result<CricketTeam>> {
     return updateStatusAndFetch(this.client, TABLE_NAME, id, statusCode, SELECTED_COLUMNS, mapTeam);
+  }
+
+  delete(id: string): Promise<Result<void>> {
+    return deleteById(this.client, TABLE_NAME, id);
   }
 }

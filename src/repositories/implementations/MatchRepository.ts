@@ -21,6 +21,7 @@ import type { DataverseRow } from "./DataverseRepositorySupport";
 
 const TABLE_NAME = "promx_cricketmatch";
 const STATUS_CODES = [1, 2, 796280001, 796280002, 796280003, 796280004, 796280005, 796280006, 796280007, 796280008] as const;
+const INACTIVE_STATUSES = [2, 796280006, 796280007, 796280008] as const;
 const MATCH_STAGE_CODES = [796280000, 796280001, 796280002, 796280003, 796280004, 796280005] as const;
 const RESULT_TYPE_CODES = [796280000, 796280001, 796280002, 796280003, 796280004] as const;
 const TOSS_DECISION_CODES = [796280000, 796280001] as const;
@@ -60,12 +61,12 @@ const WRITABLE_COLUMNS = [
   "statuscode",
 ] as const;
 const LOOKUP_TARGETS = {
-  promx_loser: "promx_crickettournamentteams",
-  promx_teama: "promx_crickettournamentteams",
-  promx_teamb: "promx_crickettournamentteams",
-  promx_tosswinner: "promx_crickettournamentteams",
-  promx_tournament: "promx_crickettournaments",
-  promx_winner: "promx_crickettournamentteams",
+  promx_loser: { entitySetName: "promx_crickettournamentteams", navigationProperty: "promx_Loser" },
+  promx_teama: { entitySetName: "promx_crickettournamentteams", navigationProperty: "promx_TeamA" },
+  promx_teamb: { entitySetName: "promx_crickettournamentteams", navigationProperty: "promx_TeamB" },
+  promx_tosswinner: { entitySetName: "promx_crickettournamentteams", navigationProperty: "promx_TossWinner" },
+  promx_tournament: { entitySetName: "promx_crickettournaments", navigationProperty: "promx_Tournament" },
+  promx_winner: { entitySetName: "promx_crickettournamentteams", navigationProperty: "promx_Winner" },
 } as const;
 
 function mapMatch(row: DataverseRow): CricketMatch {
@@ -136,7 +137,7 @@ export class MatchRepository implements IMatchRepository {
   }
 
   create(model: CricketMatch): Promise<Result<CricketMatch>> {
-    return createMapped(this.client, TABLE_NAME, model, WRITABLE_COLUMNS, mapMatch, LOOKUP_TARGETS);
+    return createMapped(this.client, TABLE_NAME, model, WRITABLE_COLUMNS, mapMatch, LOOKUP_TARGETS, INACTIVE_STATUSES);
   }
 
   update(model: CricketMatch): Promise<Result<CricketMatch>> {
@@ -144,10 +145,10 @@ export class MatchRepository implements IMatchRepository {
     if (!id) {
       return Promise.resolve(failed(new Error("A match ID is required for update."), "Could not update a match."));
     }
-    return updateMapped(this.client, TABLE_NAME, id, model, WRITABLE_COLUMNS, SELECTED_COLUMNS, mapMatch, LOOKUP_TARGETS);
+    return updateMapped(this.client, TABLE_NAME, id, model, WRITABLE_COLUMNS, SELECTED_COLUMNS, mapMatch, LOOKUP_TARGETS, INACTIVE_STATUSES);
   }
 
   updateStatus(id: string, statusCode: NonNullable<CricketMatch["statuscode"]>): Promise<Result<CricketMatch>> {
-    return updateStatusAndFetch(this.client, TABLE_NAME, id, statusCode, SELECTED_COLUMNS, mapMatch);
+    return updateStatusAndFetch(this.client, TABLE_NAME, id, statusCode, SELECTED_COLUMNS, mapMatch, INACTIVE_STATUSES);
   }
 }

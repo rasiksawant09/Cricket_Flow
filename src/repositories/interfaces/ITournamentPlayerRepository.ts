@@ -7,4 +7,5 @@ export interface ITournamentPlayerRepository {
   getByTournamentTeam(tournamentTeamId: string, pageSize?: number, cursor?: string): Promise<Result<RepositoryPage<CricketTournamentPlayer>>>;
   create(model: CricketTournamentPlayer): Promise<Result<CricketTournamentPlayer>>;
   update(model: CricketTournamentPlayer): Promise<Result<CricketTournamentPlayer>>;
+  delete(id: string): Promise<Result<void>>;
 }

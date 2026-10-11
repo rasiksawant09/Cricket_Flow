@@ -57,8 +57,8 @@ const WRITABLE_COLUMNS = [
   "statuscode",
 ] as const;
 const LOOKUP_TARGETS = {
-  promx_tournament: "promx_crickettournaments",
-  promx_tournamentteam: "promx_crickettournamentteams",
+  promx_tournament: { entitySetName: "promx_crickettournaments", navigationProperty: "promx_Tournament" },
+  promx_tournamentteam: { entitySetName: "promx_crickettournamentteams", navigationProperty: "promx_TournamentTeam" },
 } as const;
 
 function mapTournamentStanding(row: DataverseRow): CricketTournamentStanding {

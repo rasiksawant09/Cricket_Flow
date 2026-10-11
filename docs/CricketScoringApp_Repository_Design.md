@@ -519,6 +519,27 @@ Suggested Operations:
 
 ---
 
+# 18. Auction Repository
+
+Repository:
+
+AuctionRepository
+
+Source Tables:
+
+- `promx_team`
+- `promx_teamplayer`
+- `promx_player`
+
+Responsibilities:
+
+- Read active Auction teams and their Auction lookup/creation metadata in pages
+- Read active team-player associations and active Auction player master records
+
+This repository is read-only. It must not create or update Auction records. Auction data is read only for an explicit import action; tournament registration and scoring use Cricket Flow master and registration tables.
+
+---
+
 # 18. Tournament Rule Repository
 
 Repository:

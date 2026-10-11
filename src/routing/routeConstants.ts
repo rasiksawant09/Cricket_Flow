@@ -19,6 +19,8 @@ export const ROUTE_PATHS = {
   statistics: "/statistics",
   standings: "/standings",
   administration: "/admin",
+  more: "/more",
+  auctionImport: "/auction-import",
 } as const;
 
 function encodePathSegment(value: string): string {

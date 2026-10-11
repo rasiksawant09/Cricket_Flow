@@ -22,6 +22,7 @@ import type { DataverseRow } from "./DataverseRepositorySupport";
 
 const TABLE_NAME = "promx_cricketinnings";
 const STATUS_CODES = [1, 2, 796280001, 796280002, 796280003] as const;
+const INACTIVE_STATUSES = [2, 796280002, 796280003] as const;
 const INNINGS_TYPE_CODES = [796280000, 796280001] as const;
 const SELECTED_COLUMNS = [
   "promx_balls",
@@ -57,9 +58,9 @@ const WRITABLE_COLUMNS = [
   "statuscode",
 ] as const;
 const LOOKUP_TARGETS = {
-  promx_battingteam: "promx_crickettournamentteams",
-  promx_bowlingteam: "promx_crickettournamentteams",
-  promx_match: "promx_cricketmatchs",
+  promx_battingteam: { entitySetName: "promx_crickettournamentteams", navigationProperty: "promx_BattingTeam" },
+  promx_bowlingteam: { entitySetName: "promx_crickettournamentteams", navigationProperty: "promx_BowlingTeam" },
+  promx_match: { entitySetName: "promx_cricketmatchs", navigationProperty: "promx_Match" },
 } as const;
 
 function mapInnings(row: DataverseRow): CricketInnings {
@@ -101,7 +102,7 @@ export class InningsRepository implements IInningsRepository {
   }
 
   create(model: CricketInnings): Promise<Result<CricketInnings>> {
-    return createMapped(this.client, TABLE_NAME, model, WRITABLE_COLUMNS, mapInnings, LOOKUP_TARGETS);
+    return createMapped(this.client, TABLE_NAME, model, WRITABLE_COLUMNS, mapInnings, LOOKUP_TARGETS, INACTIVE_STATUSES);
   }
 
   update(model: CricketInnings): Promise<Result<CricketInnings>> {
@@ -109,6 +110,6 @@ export class InningsRepository implements IInningsRepository {
     if (!id) {
       return Promise.resolve(failed(new Error("An innings ID is required for update."), "Could not update innings."));
     }
-    return updateMapped(this.client, TABLE_NAME, id, model, WRITABLE_COLUMNS, SELECTED_COLUMNS, mapInnings, LOOKUP_TARGETS);
+    return updateMapped(this.client, TABLE_NAME, id, model, WRITABLE_COLUMNS, SELECTED_COLUMNS, mapInnings, LOOKUP_TARGETS, INACTIVE_STATUSES);
   }
 }

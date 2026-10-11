@@ -5,6 +5,8 @@ export interface ITournamentService {
   getTournaments(): Promise<Result<CricketTournament[]>>;
   getTournament(tournamentId: string): Promise<Result<CricketTournament>>;
   createTournament(tournament: CricketTournament): Promise<Result<CricketTournament>>;
+  updateTournament(tournament: CricketTournament): Promise<Result<CricketTournament>>;
+  setTournamentStatus(tournamentId: string, statusCode: NonNullable<CricketTournament["statuscode"]>): Promise<Result<CricketTournament>>;
   activateTournament(tournamentId: string): Promise<Result<CricketTournament>>;
   completeTournament(tournamentId: string): Promise<Result<CricketTournament>>;
   archiveTournament(tournamentId: string): Promise<Result<CricketTournament>>;

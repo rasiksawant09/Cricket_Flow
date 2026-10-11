@@ -5,6 +5,7 @@ import { RouterProvider as ReactRouterProvider } from "react-router-dom";
 import { MatchProvider } from "../context/MatchContext";
 import { ScoringProvider } from "../context/ScoringContext";
 import { TournamentProvider } from "../context/TournamentContext";
+import { AuctionImportProvider } from "../context/AuctionImportContext";
 import { appRouter } from "../routing/routeDefinitions";
 import { createMatchServices } from "./createMatchServices";
 import { createScoringServices } from "./createScoringServices";
@@ -16,15 +17,22 @@ interface TournamentModuleProps {
 
 export function TournamentModule({ client }: TournamentModuleProps) {
   const services = useMemo(() => createTournamentServices(client), [client]);
+  const { auctionImportService, ...tournamentServices } = services;
   const matchServices = useMemo(() => createMatchServices(client), [client]);
   const scoringServices = useMemo(() => createScoringServices(client), [client]);
 
   return (
     <FluentProvider theme={webLightTheme}>
-      <TournamentProvider {...services}>
-        <MatchProvider {...matchServices}>
+      <TournamentProvider
+        {...tournamentServices}
+        standingService={scoringServices.standingService}
+        statisticsService={scoringServices.statisticsService}
+      >
+        <MatchProvider {...matchServices} statisticsService={scoringServices.statisticsService}>
           <ScoringProvider {...scoringServices}>
-            <ReactRouterProvider router={appRouter} />
+            <AuctionImportProvider service={auctionImportService}>
+              <ReactRouterProvider router={appRouter} />
+            </AuctionImportProvider>
           </ScoringProvider>
         </MatchProvider>
       </TournamentProvider>

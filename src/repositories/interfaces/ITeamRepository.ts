@@ -7,4 +7,5 @@ export interface ITeamRepository {
   create(model: CricketTeam): Promise<Result<CricketTeam>>;
   update(model: CricketTeam): Promise<Result<CricketTeam>>;
   updateStatus(id: string, statusCode: number): Promise<Result<CricketTeam>>;
+  delete(id: string): Promise<Result<void>>;
 }

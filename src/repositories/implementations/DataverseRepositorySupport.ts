@@ -2,7 +2,11 @@ import type { DataClient, IOperationOptions, IOperationResult } from "@microsoft
 import type { DataverseRecord } from "../../models/DataverseRecord";
 
 export type DataverseRow = Record<string, unknown>;
-type LookupTargets = Readonly<Record<string, string>>;
+interface LookupTarget {
+  entitySetName: string;
+  navigationProperty: string;
+}
+type LookupTargets = Readonly<Record<string, string | LookupTarget>>;
 type RowMapper<T> = (row: DataverseRow) => T;
 
 export function asError(error: unknown, fallback: string): Error {
@@ -201,6 +205,7 @@ export function toPayload<TModel extends object>(
   model: TModel,
   writableColumns: readonly string[],
   lookupTargets: LookupTargets = {},
+  inactiveStatuses: readonly number[] = [2],
 ): Record<string, unknown> {
   const values = model as unknown as Record<string, unknown>;
   const payload: Record<string, unknown> = {};
@@ -209,18 +214,24 @@ export function toPayload<TModel extends object>(
     if (value === undefined) {
       continue;
     }
-    const entitySet = lookupTargets[column];
-    if (entitySet !== undefined && typeof value === "string") {
+    const target = lookupTargets[column];
+    const entitySet = typeof target === "string" ? target : target?.entitySetName;
+    const navigationProperty = typeof target === "string" ? column : target?.navigationProperty;
+    if (entitySet !== undefined && navigationProperty !== undefined && typeof value === "string") {
       const normalizedId = value.replace(/[{}]/g, "");
       if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(normalizedId)) {
         throw new Error(`Invalid GUID supplied for lookup ${column}.`);
       }
-      payload[`${column}@odata.bind`] = `/${entitySet}(${normalizedId})`;
-    } else if (entitySet !== undefined && value === null) {
-      payload[`${column}@odata.bind`] = null;
+      payload[`${navigationProperty}@odata.bind`] = `/${entitySet}(${normalizedId})`;
+    } else if (entitySet !== undefined && navigationProperty !== undefined && value === null) {
+      payload[`${navigationProperty}@odata.bind`] = null;
     } else {
       payload[column] = value;
     }
+  }
+  // Dataverse rejects a statuscode that doesn't belong to the statecode sent, so derive the state from the status.
+  if (typeof payload.statuscode === "number") {
+    payload.statecode = inactiveStatuses.includes(payload.statuscode) ? 1 : 0;
   }
   return payload;
 }
@@ -260,9 +271,10 @@ export async function createMapped<TModel extends object, TResult>(
   writableColumns: readonly string[],
   mapper: RowMapper<TResult>,
   lookupTargets?: LookupTargets,
+  inactiveStatuses?: readonly number[],
 ): Promise<Result<TResult>> {
   try {
-    const payload = toPayload(model, writableColumns, lookupTargets);
+    const payload = toPayload(model, writableColumns, lookupTargets, inactiveStatuses);
     const operation = await client.createRecordAsync<Record<string, unknown>, DataverseRow>(tableName, payload);
     return mapOperation(operation, tableName, mapper);
   } catch (error) {
@@ -279,9 +291,10 @@ export async function updateMapped<TModel extends object, TResult>(
   selectedColumns: readonly string[],
   mapper: RowMapper<TResult>,
   lookupTargets?: LookupTargets,
+  inactiveStatuses?: readonly number[],
 ): Promise<Result<TResult>> {
   try {
-    const payload = toPayload(model, writableColumns, lookupTargets);
+    const payload = toPayload(model, writableColumns, lookupTargets, inactiveStatuses);
     const operation = await client.updateRecordAsync<Record<string, unknown>, DataverseRow>(tableName, id, payload);
     if (!operation.success) {
       return failed(operation.error, `Could not update ${tableName} record ${id}.`);
@@ -299,12 +312,13 @@ export async function updateStatusAndFetch<TResult, TStatusCode extends number>(
   statusCode: TStatusCode,
   selectedColumns: readonly string[],
   mapper: RowMapper<TResult>,
+  inactiveStatuses: readonly number[] = [2],
 ): Promise<Result<TResult>> {
   try {
     const operation = await client.updateRecordAsync<Record<string, unknown>, DataverseRow>(
       tableName,
       id,
-      { statuscode: statusCode },
+      { statuscode: statusCode, statecode: inactiveStatuses.includes(statusCode) ? 1 : 0 },
     );
     if (!operation.success) {
       return failed(operation.error, `Could not update status for ${tableName} record ${id}.`);
@@ -312,6 +326,18 @@ export async function updateStatusAndFetch<TResult, TStatusCode extends number>(
     return fetchById(client, tableName, id, selectedColumns, mapper);
   } catch (error) {
     return failed(error, `Could not update status for ${tableName} record ${id}.`);
+  }
+}
+
+export async function deleteById(client: DataClient, tableName: string, id: string): Promise<Result<void>> {
+  try {
+    const operation = await client.deleteRecordAsync(tableName, id);
+    if (!operation.success) {
+      return failed(operation.error, `Could not delete ${tableName} record ${id}.`);
+    }
+    return { success: true, data: undefined };
+  } catch (error) {
+    return failed(error, `Could not delete ${tableName} record ${id}.`);
   }
 }
 

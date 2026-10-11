@@ -6,6 +6,7 @@ import {
   DataGridHeader,
   DataGridHeaderCell,
   DataGridRow,
+  Button,
   Text,
   makeStyles,
   tokens,
@@ -20,7 +21,7 @@ export interface PlayingXIGridRow {
   viceCaptain: string;
 }
 
-const columns: TableColumnDefinition<PlayingXIGridRow>[] = [
+const baseColumns: TableColumnDefinition<PlayingXIGridRow>[] = [
   createTableColumn<PlayingXIGridRow>({
     columnId: "playerName",
     renderHeaderCell: () => "Player Name",
@@ -64,10 +65,30 @@ interface PlayingXIGridProps {
   title: string;
   rows: PlayingXIGridRow[];
   emptyMessage: string;
+  actionLabel?: string;
+  disabled?: boolean;
+  onAction?(row: PlayingXIGridRow): void;
 }
 
-export function PlayingXIGrid({ title, rows, emptyMessage }: PlayingXIGridProps) {
+export function PlayingXIGrid({ title, rows, emptyMessage, actionLabel, disabled = false, onAction }: PlayingXIGridProps) {
   const styles = useStyles();
+  const columns = actionLabel && onAction
+    ? [
+      ...baseColumns,
+      createTableColumn<PlayingXIGridRow>({
+        columnId: "action",
+        renderHeaderCell: () => "",
+          renderCell: (player) => (
+          <Button size="small" appearance="subtle" disabled={disabled} onClick={(event) => {
+            event.stopPropagation();
+            onAction(player);
+          }}>
+            {actionLabel}
+          </Button>
+        ),
+      }),
+    ]
+    : baseColumns;
 
   return (
     <section className={styles.section} aria-label={title}>

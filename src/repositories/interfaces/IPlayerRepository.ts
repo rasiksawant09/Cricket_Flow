@@ -7,4 +7,5 @@ export interface IPlayerRepository {
   create(model: CricketPlayer): Promise<Result<CricketPlayer>>;
   update(model: CricketPlayer): Promise<Result<CricketPlayer>>;
   updateStatus(id: string, statusCode: number): Promise<Result<CricketPlayer>>;
+  delete(id: string): Promise<Result<void>>;
 }

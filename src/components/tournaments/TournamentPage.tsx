@@ -5,9 +5,14 @@ interface TournamentPageProps {
   title: string;
   description?: string;
   children: ReactNode;
+  embedded?: boolean;
 }
 
-export function TournamentPage({ title, description, children }: TournamentPageProps) {
+export function TournamentPage({ title, description, children, embedded = false }: TournamentPageProps) {
+  if (embedded) {
+    return <div className="cf-page-embedded">{children}</div>;
+  }
+
   return (
     <main className="cf-page">
       <header className="cf-page-heading">

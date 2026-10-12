@@ -28,8 +28,14 @@ import { useTournamentContext } from "../../hooks/useTournamentContext";
 import { useTournamentRequest } from "../../hooks/useTournamentRequest";
 import type { CricketTournamentTeam } from "../../models/CricketTournamentTeam";
 
-export function TournamentTeamsScreen() {
-  const { id } = useParams<{ id: string }>();
+interface TournamentTeamsScreenProps {
+  tournamentId?: string;
+  embedded?: boolean;
+}
+
+export function TournamentTeamsScreen({ tournamentId, embedded = false }: TournamentTeamsScreenProps) {
+  const { id: routeId } = useParams<{ id: string }>();
+  const id = tournamentId ?? routeId;
   const {
     tournamentTeams,
     masterTeams,
@@ -113,7 +119,7 @@ export function TournamentTeamsScreen() {
   }
 
   return (
-    <TournamentPage title="Tournament Teams">
+    <TournamentPage embedded={embedded} title="Tournament Teams">
       {id && (
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-end", gap: "8px" }}>
           <TournamentTeamFormDialog

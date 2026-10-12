@@ -9,6 +9,11 @@ import { useTournamentContext } from "../../hooks/useTournamentContext";
 
 const TOP_PLAYERS_LIMIT = 10;
 
+interface TournamentLeaderboardsScreenProps {
+  tournamentId?: string;
+  embedded?: boolean;
+}
+
 const useStyles = makeStyles({
   leaderboards: {
     display: "grid",
@@ -18,7 +23,7 @@ const useStyles = makeStyles({
   },
 });
 
-export function TournamentLeaderboardsScreen() {
+export function TournamentLeaderboardsScreen({ tournamentId, embedded = false }: TournamentLeaderboardsScreenProps) {
   const {
     tournaments,
     currentTournament,
@@ -26,10 +31,10 @@ export function TournamentLeaderboardsScreen() {
     loadTournamentLeaderboards,
   } = useTournamentContext();
   const styles = useStyles();
-  const tournamentRequest = useAsyncResult(loadTournaments);
+  const tournamentRequest = useAsyncResult(loadTournaments, !tournamentId);
   const tournamentOptions = tournaments.length > 0 ? tournaments : tournamentRequest.data ?? [];
-  const [tournamentSelection, setTournamentSelection] = useState(currentTournament?.promx_crickettournamentid ?? "");
-  const selectedTournamentId = tournamentOptions.find((tournament) => tournament.promx_crickettournamentid === tournamentSelection)?.promx_crickettournamentid
+  const [tournamentSelection, setTournamentSelection] = useState(tournamentId ?? currentTournament?.promx_crickettournamentid ?? "");
+  const selectedTournamentId = tournamentId ?? tournamentOptions.find((tournament) => tournament.promx_crickettournamentid === tournamentSelection)?.promx_crickettournamentid
     ?? tournamentOptions.find((tournament) => tournament.promx_crickettournamentid === currentTournament?.promx_crickettournamentid)?.promx_crickettournamentid
     ?? tournamentOptions[0]?.promx_crickettournamentid
     ?? "";
@@ -40,14 +45,15 @@ export function TournamentLeaderboardsScreen() {
   );
   const leaderboardsRequest = useAsyncResult(loadData, Boolean(selectedTournamentId));
   const leaderboards = leaderboardsRequest.data;
-  const selectedTournament = tournamentOptions.find((tournament) => tournament.promx_crickettournamentid === selectedTournamentId);
+  const selectedTournament = tournamentOptions.find((tournament) => tournament.promx_crickettournamentid === selectedTournamentId)
+    ?? (currentTournament?.promx_crickettournamentid === selectedTournamentId ? currentTournament : undefined);
   const error = tournamentRequest.error ?? leaderboardsRequest.error;
   const noLeaderboardRows = leaderboards
     && leaderboards.topRunScorers.length === 0
     && leaderboards.topWicketTakers.length === 0
     && leaderboards.bestStrikeRates.length === 0
     && leaderboards.bestEconomyRates.length === 0;
-  const emptyMessage = tournamentOptions.length === 0
+  const emptyMessage = !selectedTournamentId && tournamentOptions.length === 0
     ? "No tournaments are available."
     : !selectedTournamentId
       ? "Select a tournament to view leaderboards."
@@ -56,8 +62,8 @@ export function TournamentLeaderboardsScreen() {
         : undefined;
 
   return (
-    <TournamentPage title="Tournament Leaderboards" description={selectedTournament?.promx_tournamentname}>
-      {tournamentOptions.length > 0 && (
+    <TournamentPage embedded={embedded} title="Tournament Leaderboards" description={selectedTournament?.promx_tournamentname}>
+      {!tournamentId && tournamentOptions.length > 0 && (
         <RecordSelector
           label="Tournament"
           selectedId={selectedTournamentId}

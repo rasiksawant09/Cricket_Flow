@@ -42,8 +42,14 @@ function matchesFlag(value: boolean | null | undefined, filter: string): boolean
   return !filter || (filter === "yes") === (value === true);
 }
 
-export function TournamentPlayersScreen() {
-  const { id } = useParams<{ id: string }>();
+interface TournamentPlayersScreenProps {
+  tournamentId?: string;
+  embedded?: boolean;
+}
+
+export function TournamentPlayersScreen({ tournamentId, embedded = false }: TournamentPlayersScreenProps) {
+  const { id: routeId } = useParams<{ id: string }>();
+  const id = tournamentId ?? routeId;
   const {
     tournamentPlayers,
     tournamentTeams,
@@ -156,7 +162,7 @@ export function TournamentPlayersScreen() {
   ];
 
   return (
-    <TournamentPage title="Tournament Players">
+    <TournamentPage embedded={embedded} title="Tournament Players">
       {id && (
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-end", gap: "8px" }}>
           <TournamentPlayerAddDialog

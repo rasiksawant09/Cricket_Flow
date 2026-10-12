@@ -9,7 +9,11 @@ import { TournamentPage } from "../../components/tournaments/TournamentPage";
 import { TournamentRequestState } from "../../components/tournaments/TournamentRequestState";
 import { formatScheduledDate, matchStatusLabel } from "./matchFormatting";
 
-export function MatchSetupScreen() {
+interface MatchSetupScreenProps {
+  embedded?: boolean;
+}
+
+export function MatchSetupScreen({ embedded = false }: MatchSetupScreenProps) {
   const { id } = useParams<{ id: string }>();
   const { validateMatchSetup } = useMatchContext();
   const { request, match, tournament, teamNames } = useMatchRecord(id);
@@ -22,7 +26,7 @@ export function MatchSetupScreen() {
   const validation = useTournamentRequest(validate);
 
   return (
-    <TournamentPage title={match?.promx_matchname ?? `Match ${match?.promx_matchnumber ?? "setup"} setup`}>
+    <TournamentPage embedded={embedded} title={match?.promx_matchname ?? `Match ${match?.promx_matchnumber ?? "setup"} setup`}>
       <TournamentRequestState
         isLoading={request.isLoading}
         error={request.error}

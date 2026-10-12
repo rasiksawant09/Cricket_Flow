@@ -1,8 +1,7 @@
-import { createTableColumn } from "@fluentui/react-components";
+import { createTableColumn, Tab, TabList } from "@fluentui/react-components";
 import type { TableColumnDefinition } from "@fluentui/react-components";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { MatchInformation } from "../../components/matches/MatchInformation";
 import { SortableDataGrid } from "../../components/statistics/SortableDataGrid";
 import { textColumn } from "../../components/statistics/tableColumns";
 import { TournamentPage } from "../../components/tournaments/TournamentPage";
@@ -20,6 +19,10 @@ import type { InningsScorecardStatistics } from "../../services/interfaces/IStat
 type BatterRow = InningsScorecardStatistics["batting"][number];
 type BowlerRow = InningsScorecardStatistics["bowling"][number];
 
+function inningsKey(innings: CricketInnings): string {
+  return innings.promx_cricketinningsid ?? innings.promx_inningsname;
+}
+
 interface ScorecardData {
   match: CricketMatch;
   innings: CricketInnings[];
@@ -31,12 +34,17 @@ interface ScorecardData {
 
 const LIVE_STATUSES = new Set([796280002, 796280003, 796280004, 796280005]);
 
-export function ScorecardScreen() {
+interface ScorecardScreenProps {
+  embedded?: boolean;
+}
+
+export function ScorecardScreen({ embedded = false }: ScorecardScreenProps) {
   const { id } = useParams<{ id: string }>();
   const { loadMatch, loadPlayingXI, loadInningsScorecard } = useMatchContext();
   const { loadMatchInnings, loadMatchStates } = useScoringContext();
   const { loadTournamentTeams } = useTournamentContext();
   const [data, setData] = useState<ScorecardData | null>(null);
+  const [selectedInnings, setSelectedInnings] = useState<{ matchId?: string; inningsId: string }>({ matchId: id, inningsId: "" });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -120,6 +128,11 @@ export function ScorecardScreen() {
 
   const visibleData = data?.match.promx_cricketmatchid === id ? data : null;
   const waitingForMatch = isLoading || (Boolean(id) && !visibleData);
+  const sortedInnings = visibleData?.innings.slice().sort((left, right) => left.promx_inningsnumber - right.promx_inningsnumber) ?? [];
+  const selectedInningsId = selectedInnings.matchId === id && sortedInnings.some((innings) => inningsKey(innings) === selectedInnings.inningsId)
+    ? selectedInnings.inningsId
+    : sortedInnings[0] ? inningsKey(sortedInnings[0]) : "";
+  const activeInnings = sortedInnings.find((innings) => inningsKey(innings) === selectedInningsId);
   const playerNames = new Map(visibleData?.players.flatMap((player) => player.promx_cricketmatchplayerid
     ? [[player.promx_cricketmatchplayerid, player.promx_playernamesnapshot] as const]
     : []) ?? []);
@@ -148,12 +161,36 @@ export function ScorecardScreen() {
   ];
 
   return (
-    <TournamentPage title={data?.match.promx_matchname ?? "Scorecard"}>
+    <TournamentPage embedded={embedded} title={data?.match.promx_matchname ?? "Scorecard"}>
       <TournamentRequestState isLoading={waitingForMatch} error={error} loadingLabel="Loading scorecard" />
-      {!waitingForMatch && !error && visibleData && visibleData.innings.length === 0 && <p>No innings have started for this match.</p>}
-      {!waitingForMatch && !error && visibleData && visibleData.innings.length > 0 && (
+      {!waitingForMatch && !error && visibleData && sortedInnings.length === 0 && <p>No innings have started for this match.</p>}
+      {!waitingForMatch && !error && visibleData && activeInnings && (
         <>
-          {visibleData.innings.slice().sort((a, b) => a.promx_inningsnumber - b.promx_inningsnumber).map((innings) => {
+          <TabList
+            className="scorecard-innings-tabs"
+            selectedValue={selectedInningsId}
+            onTabSelect={(_, tab) => setSelectedInnings({ matchId: id, inningsId: tab.value as string })}
+            aria-label="Scorecard innings"
+          >
+            {sortedInnings.map((innings) => {
+              const state = statesByInnings.get(innings.promx_cricketinningsid ?? "");
+              const scorecard = scorecardsByInnings.get(innings.promx_cricketinningsid ?? "");
+              const teamName = teamNames.get(innings.promx_battingteam) ?? "Unknown team";
+              const tabLabel = innings.promx_issuperover ? `Super Over ${innings.promx_inningsnumber}` : teamName;
+              const runs = state?.promx_currentruns ?? innings.promx_runs ?? scorecard?.runs ?? 0;
+              const wickets = state?.promx_currentwickets ?? innings.promx_wickets ?? scorecard?.wickets ?? 0;
+              return (
+                <Tab key={inningsKey(innings)} value={inningsKey(innings)}>
+                  <span className="scorecard-innings-tab-content">
+                    <span className="scorecard-innings-tab-label">{tabLabel}</span>
+                    <span className="scorecard-innings-tab-score">{`${runs}/${wickets}`}</span>
+                  </span>
+                </Tab>
+              );
+            })}
+          </TabList>
+          {(() => {
+            const innings = activeInnings;
             const state = statesByInnings.get(innings.promx_cricketinningsid ?? "");
             const scorecard = scorecardsByInnings.get(innings.promx_cricketinningsid ?? "");
             const batters = scorecard?.batting ?? [];
@@ -171,36 +208,45 @@ export function ScorecardScreen() {
               return `${fall.runs}/${fall.wickets} (${player}, ${over} ov)`;
             }) ?? [];
             return (
-              <section key={innings.promx_cricketinningsid ?? innings.promx_inningsname}>
+              <section className="scorecard-innings-panel">
                 <h2>{label}</h2>
-                <MatchInformation fields={[
-                  { label: "Batting", value: teamName },
-                  { label: "Bowling", value: opponentName },
-                  { label: "Score", value: `${scoreRuns}/${scoreWickets}` },
-                  { label: "Overs", value: String(overs) },
-                ]} />
+                <div className="scorecard-score-banner" aria-label={`${teamName} score ${scoreRuns} for ${scoreWickets}`}>
+                  <div className="scorecard-score-team">
+                    <span>Batting</span>
+                    <strong>{teamName}</strong>
+                  </div>
+                  <span className="scorecard-score-versus">VS</span>
+                  <div className="scorecard-score-team scorecard-score-opponent">
+                    <span>Bowling</span>
+                    <strong>{opponentName}</strong>
+                  </div>
+                  <div className="scorecard-score-total">
+                    <strong>{`${scoreRuns}/${scoreWickets}`}</strong>
+                    <span>{`${overs} overs`}</span>
+                  </div>
+                </div>
                 {batters.length > 0 && (
-                  <div>
+                  <section className="scorecard-stat-section">
                     <h3>Batting</h3>
                     <SortableDataGrid ariaLabel={`${teamName} batting figures`} items={batters} columns={battingColumns}
                       getRowId={(batter) => batter.playerId}
                       defaultSortState={{ sortColumn: "runs", sortDirection: "descending" }} />
-                  </div>
+                  </section>
                 )}
                 {wicketFalls.length > 0 && (
-                  <p>Fall of wickets: {wicketFalls.join(" · ")}</p>
+                  <p className="scorecard-fall-of-wickets"><strong>Fall of wickets</strong><span>{wicketFalls.join(" · ")}</span></p>
                 )}
                 {bowlers.length > 0 && (
-                  <div>
+                  <section className="scorecard-stat-section">
                     <h3>Bowling</h3>
                     <SortableDataGrid ariaLabel={`${opponentName} bowling figures`} items={bowlers} columns={bowlingColumns}
                       getRowId={(bowler) => bowler.playerId}
                       defaultSortState={{ sortColumn: "wickets", sortDirection: "descending" }} />
-                  </div>
+                  </section>
                 )}
               </section>
             );
-          })}
+          })()}
         </>
       )}
     </TournamentPage>

@@ -15,7 +15,12 @@ interface StandingsViewData {
   teams: CricketTournamentTeam[];
 }
 
-export function TournamentStandingsScreen() {
+interface TournamentStandingsScreenProps {
+  tournamentId?: string;
+  embedded?: boolean;
+}
+
+export function TournamentStandingsScreen({ tournamentId, embedded = false }: TournamentStandingsScreenProps) {
   const {
     tournaments,
     currentTournament,
@@ -23,10 +28,10 @@ export function TournamentStandingsScreen() {
     loadTournamentTeams,
     loadTournamentStandings,
   } = useTournamentContext();
-  const tournamentRequest = useAsyncResult(loadTournaments);
+  const tournamentRequest = useAsyncResult(loadTournaments, !tournamentId);
   const tournamentOptions = tournaments.length > 0 ? tournaments : tournamentRequest.data ?? [];
-  const [tournamentSelection, setTournamentSelection] = useState(currentTournament?.promx_crickettournamentid ?? "");
-  const selectedTournamentId = tournamentOptions.find((tournament) => tournament.promx_crickettournamentid === tournamentSelection)?.promx_crickettournamentid
+  const [tournamentSelection, setTournamentSelection] = useState(tournamentId ?? currentTournament?.promx_crickettournamentid ?? "");
+  const selectedTournamentId = tournamentId ?? tournamentOptions.find((tournament) => tournament.promx_crickettournamentid === tournamentSelection)?.promx_crickettournamentid
     ?? tournamentOptions.find((tournament) => tournament.promx_crickettournamentid === currentTournament?.promx_crickettournamentid)?.promx_crickettournamentid
     ?? tournamentOptions[0]?.promx_crickettournamentid
     ?? "";
@@ -46,7 +51,8 @@ export function TournamentStandingsScreen() {
   const teamNames = new Map(data?.teams.flatMap((team) => team.promx_crickettournamentteamid
     ? [[team.promx_crickettournamentteamid, team.promx_tournamentteamname] as const]
     : []) ?? []);
-  const selectedTournament = tournamentOptions.find((tournament) => tournament.promx_crickettournamentid === selectedTournamentId);
+  const selectedTournament = tournamentOptions.find((tournament) => tournament.promx_crickettournamentid === selectedTournamentId)
+    ?? (currentTournament?.promx_crickettournamentid === selectedTournamentId ? currentTournament : undefined);
   const columns: TableColumnDefinition<CricketTournamentStanding>[] = [
     createTableColumn<CricketTournamentStanding>({
       columnId: "team",
@@ -92,7 +98,7 @@ export function TournamentStandingsScreen() {
     }),
   ];
   const error = tournamentRequest.error ?? standingsRequest.error;
-  const emptyMessage = tournamentOptions.length === 0
+  const emptyMessage = !selectedTournamentId && tournamentOptions.length === 0
     ? "No tournaments are available."
     : !selectedTournamentId
       ? "Select a tournament to view standings."
@@ -101,8 +107,8 @@ export function TournamentStandingsScreen() {
         : undefined;
 
   return (
-    <TournamentPage title="Tournament Standings" description={selectedTournament?.promx_tournamentname}>
-      {tournamentOptions.length > 0 && (
+    <TournamentPage embedded={embedded} title="Tournament Standings" description={selectedTournament?.promx_tournamentname}>
+      {!tournamentId && tournamentOptions.length > 0 && (
         <RecordSelector
           label="Tournament"
           selectedId={selectedTournamentId}

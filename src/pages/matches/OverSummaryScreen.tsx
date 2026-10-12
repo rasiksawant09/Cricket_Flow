@@ -28,7 +28,11 @@ import type { CricketBallEvent } from "../../models/CricketBallEvent";
 
 type ActionMode = "reverse" | "correct" | null;
 
-export function OverSummaryScreen() {
+interface OverSummaryScreenProps {
+  embedded?: boolean;
+}
+
+export function OverSummaryScreen({ embedded = false }: OverSummaryScreenProps) {
   const { id } = useParams<{ id: string }>();
   const { currentMatch, loadMatch } = useMatchContext();
   const { loadMatchEvents, reverseBall, correctBall } = useScoringContext();
@@ -100,7 +104,7 @@ export function OverSummaryScreen() {
   }
 
   return (
-    <TournamentPage title={match?.promx_matchname ?? "Over Summary"} description="Ball Event history and correction lineage">
+    <TournamentPage embedded={embedded} title={match?.promx_matchname ?? "Over Summary"} description="Ball Event history and correction lineage">
       <TournamentRequestState isLoading={request.isLoading} error={request.error} loadingLabel="Loading Ball Event history"
         emptyMessage={!request.isLoading && !request.error && events.length === 0 ? "No Ball Events are recorded for this match." : undefined} />
       {actionError && <MessageBar intent="error"><MessageBarBody>{actionError.message}</MessageBarBody></MessageBar>}
